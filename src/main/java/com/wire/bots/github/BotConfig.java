@@ -16,17 +16,12 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
 
-package com.wire.bots.hello;
+package com.wire.bots.github;
 
-/**
- * Created with IntelliJ IDEA.
- * User: dejankovacevic
- * Date: 22/10/16
- * Time: 14:56
- */
-public class HelloConfig extends com.wire.bots.sdk.Configuration {
+public class BotConfig extends com.wire.bots.sdk.Configuration {
     public String name;
     public int accent;
+    public String host;
 
     public String getName() {
         return name;
@@ -36,4 +31,7 @@ public class HelloConfig extends com.wire.bots.sdk.Configuration {
         return accent;
     }
 
+    public String getHost() {
+        return host;
+    }
 }

@@ -1,0 +1,77 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: github
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: github
+    spec:
+      restartPolicy: Always
+
+      containers:
+        - name: github
+          image: eu.gcr.io/wire-bot/github:latest
+
+          resources:
+            requests:
+              memory: "50Mi"
+            limits:
+              memory: "500Mi"
+
+          env:
+            - name: TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: github-knows
+                  key: token
+
+            - name: KEYSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: github-knows
+                  key: keystore_password
+
+          volumeMounts:
+            - name: github-disk
+              mountPath: /var/lib/github/crypto
+
+            - name: github-config
+              mountPath: /etc/github
+
+          command:
+            - "/usr/bin/java"
+            - "-Ddw.server.applicationConnectors[1].keyStorePassword=$(KEYSTORE_PASSWORD)"
+            - "-Ddw.auth=$(TOKEN)"
+            - "-jar"
+            - "github.jar"
+            - "server"
+            - "/etc/github/github.yaml"
+
+      volumes:
+        - name: github-disk
+          gcePersistentDisk:
+            pdName: github-disk
+            fsType: ext4
+
+        - name: github-config
+          configMap:
+            name: github-config
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: github
+spec:
+  selector:
+    name: github
+  type: LoadBalancer
+  ports:
+    - name: https
+      port: 443
+      protocol: TCP
