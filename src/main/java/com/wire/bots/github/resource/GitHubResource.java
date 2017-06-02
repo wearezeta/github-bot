@@ -86,6 +86,10 @@ public class GitHubResource {
                     handleIssue(event, client, response);
                     break;
                 }
+                case "issue_comment": {
+                    handleIssueComment(event, client, response);
+                    break;
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -94,6 +98,21 @@ public class GitHubResource {
         return Response.
                 ok().
                 build();
+    }
+
+    private void handleIssueComment(String event, WireClient client, GitResponse response) throws Exception {
+        if (response.action == null) return;
+
+        switch (response.action) {
+            case "created": {
+                String title = String.format("[%s] Issue Comment #%s: %s",
+                        response.repository.fullName,
+                        response.issue.number,
+                        response.issue.title);
+                sendLinkPreview(client, response.comment.url, title, response.sender.avatarUrl);
+                break;
+            }
+        }
     }
 
     private void handleIssue(String event, WireClient client, GitResponse response) throws Exception {
