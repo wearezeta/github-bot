@@ -5,12 +5,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Comment {
-    @JsonProperty("body")
+    @JsonProperty
     public String body;
 
-    @JsonProperty("user")
+    @JsonProperty
     public User user;
 
-    @JsonProperty("html_url")
-    public String url;
+    @JsonProperty
+    public String html_url;
+
+    @JsonProperty
+    public String id;
+
+    @JsonProperty
+    public Integer line;
 }

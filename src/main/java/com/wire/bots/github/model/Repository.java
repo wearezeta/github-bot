@@ -5,6 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Repository {
-        @JsonProperty("full_name")
-        public String fullName;
+    @JsonProperty("full_name")
+    public String full_name;
 }

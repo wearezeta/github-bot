@@ -47,7 +47,7 @@ public class GitHubResource {
         Logger.info("%s\tBot: %s\t%s\tDelivery: %s", event, botId, signature, delivery);
 
         String secret = Util.readLine(new File(String.format("%s/%s/secret", conf.getCryptoDir(), botId)));
-        String challenge = "sha1=" + Util.getHmacSHA1(payload, secret);
+        String challenge = String.format("sha1=%s", Util.getHmacSHA1(payload, secret));
         if (!challenge.equals(signature)) {
             Logger.warning("Invalid Signature. Bot: %s", botId);
             return Response.
@@ -87,7 +87,11 @@ public class GitHubResource {
                     break;
                 }
                 case "issue_comment": {
-                    handleIssueComment(event, client, response);
+                    handleIssueComment(client, response);
+                    break;
+                }
+                case "commit_comment": {
+                    handleCommitComment(client, response);
                     break;
                 }
             }
@@ -100,16 +104,29 @@ public class GitHubResource {
                 build();
     }
 
-    private void handleIssueComment(String event, WireClient client, GitResponse response) throws Exception {
+    private void handleCommitComment(WireClient client, GitResponse response) {
+        switch (response.action) {
+            case "created": {
+                String title = String.format("[%s] Issue Comment #%s: %s",
+                        response.repository.full_name,
+                        response.issue.number,
+                        response.issue.title);
+                //sendLinkPreview(client, response.comment.html_url, title, response.sender.avatarUrl);
+                break;
+            }
+        }
+    }
+
+    private void handleIssueComment(WireClient client, GitResponse response) throws Exception {
         if (response.action == null) return;
 
         switch (response.action) {
             case "created": {
                 String title = String.format("[%s] Issue Comment #%s: %s",
-                        response.repository.fullName,
+                        response.repository.full_name,
                         response.issue.number,
                         response.issue.title);
-                sendLinkPreview(client, response.comment.url, title, response.sender.avatarUrl);
+                sendLinkPreview(client, response.comment.html_url, title, response.sender.avatarUrl);
                 break;
             }
         }
@@ -122,7 +139,7 @@ public class GitHubResource {
             case "opened":
             case "reopened": {
                 String title = String.format("[%s] New Issue #%s: %s",
-                        response.repository.fullName,
+                        response.repository.full_name,
                         response.issue.number,
                         response.issue.title);
                 sendLinkPreview(client, response.issue.url, title, event + "_" + response.action);
@@ -130,7 +147,7 @@ public class GitHubResource {
             }
             case "closed": {
                 String title = String.format("[%s] Issue #%s closed: %s",
-                        response.repository.fullName,
+                        response.repository.full_name,
                         response.issue.number,
                         response.issue.title);
                 sendLinkPreview(client, response.issue.url, title, event + "_" + response.action);
@@ -142,7 +159,7 @@ public class GitHubResource {
     private void handlePush(WireClient client, GitResponse response) throws Exception {
         if (!response.commits.isEmpty()) {
             String title = String.format("[%s] %s pushed %d commits",
-                    response.repository.fullName,
+                    response.repository.full_name,
                     response.sender.login,
                     response.commits.size());
             sendLinkPreview(client, response.compare, title, response.sender.avatarUrl);
@@ -164,13 +181,13 @@ public class GitHubResource {
                 String title = null;
                 if ((response.review.body == null || response.review.body.isEmpty()) && !response.review.state.equals("commented")) {
                     title = String.format("[%s] %s %s PR #%s",
-                            response.repository.fullName,
+                            response.repository.full_name,
                             response.review.user.login,
                             response.review.state,
                             response.pr.number);
                 } else if (response.review.body != null) {
                     title = String.format("[%s] %s %s PR #%s: %s",
-                            response.repository.fullName,
+                            response.repository.full_name,
                             response.review.user.login,
                             response.review.state,
                             response.pr.number,
@@ -192,11 +209,11 @@ public class GitHubResource {
             case "created": {
                 if (response.comment.body != null) {
                     String title = String.format("[%s] %s added a comment to PR #%s: %s",
-                            response.repository.fullName,
+                            response.repository.full_name,
                             response.comment.user.login,
                             response.pr.number,
                             response.comment.body);
-                    sendLinkPreview(client, response.comment.url, title, response.sender.avatarUrl);
+                    sendLinkPreview(client, response.comment.html_url, title, response.sender.avatarUrl);
                 }
                 break;
             }
@@ -209,7 +226,7 @@ public class GitHubResource {
         switch (response.action) {
             case "opened": {
                 String title = String.format("[%s] New PR #%s: %s",
-                        response.repository.fullName,
+                        response.repository.full_name,
                         response.pr.number,
                         response.pr.title);
                 sendLinkPreview(client, response.pr.url, title, response.sender.avatarUrl, event + "_" + response.action);
@@ -218,7 +235,7 @@ public class GitHubResource {
             case "closed": {
                 String mergedOrClosed = response.pr.merged ? "merged" : "closed";
                 String title = String.format("[%s] PR #%s %s: %s",
-                        response.repository.fullName,
+                        response.repository.full_name,
                         response.pr.number,
                         mergedOrClosed,
                         response.pr.title);
@@ -245,7 +262,7 @@ public class GitHubResource {
 
     private void sendLinkPreview(WireClient client, String url, String title, String avatarUrl,
                                  String imageName) throws Exception {
-        Picture preview = null;
+        Picture preview;
         avatarUrl = avatarUrl + "&s=20";
         try (InputStream in = new URL(avatarUrl).openStream()) {
             BufferedImage avatarImage = ImageIO.read(in);

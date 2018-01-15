@@ -6,10 +6,10 @@
 
     <artifactId>github-bot</artifactId>
     <groupId>com.wire.bots</groupId>
-    <version>0.1.4</version>
+    <version>0.1.5</version>
 
     <properties>
-        <bot.version>1.0.3</bot.version>
+        <bot.version>1.0.6</bot.version>
     </properties>
 
     <repositories>
@@ -64,8 +64,24 @@
     <dependencies>
         <dependency>
             <groupId>com.wire.bots</groupId>
-            <artifactId>bot-sdk</artifactId>
+            <artifactId>lithium</artifactId>
             <version>${bot.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.spullara.mustache.java</groupId>
+            <artifactId>compiler</artifactId>
+            <version>0.9.5</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+        </dependency>
+        <dependency>
+            <groupId>io.dropwizard</groupId>
+            <artifactId>dropwizard-testing</artifactId>
+            <version>1.1.0</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
