@@ -23,23 +23,23 @@ public class MessageTemplateTest {
     }
 
     @Test
-    public void issueOpenedTest() throws IOException {
-        test("issue", "opened");
+    public void issuesOpenedTest() throws IOException {
+        test("issues", "opened");
     }
 
     @Test
-    public void issueReopenedTest() throws IOException {
-        test("issue", "reopened");
+    public void issuesReopenedTest() throws IOException {
+        test("issues", "reopened");
     }
 
     @Test
-    public void issueClosedTest() throws IOException {
-        test("issue", "closed");
+    public void issuesClosedTest() throws IOException {
+        test("issues", "closed");
     }
 
     @Test
-    public void issueCommentTest() throws IOException {
-        test("issue", "comment");
+    public void issuesCommentTest() throws IOException {
+        test("issues", "comment");
     }
     // ------------------- Tests -------------------
 
