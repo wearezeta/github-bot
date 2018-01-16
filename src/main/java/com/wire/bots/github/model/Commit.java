@@ -5,6 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Commit {
-    @JsonProperty("message")
+    @JsonProperty
     public String message;
 }

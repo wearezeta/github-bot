@@ -1,0 +1,8 @@
+**[{{repository.full_name}}]** Push by **{{sender.login}}**
+
+{{#commits}}
+ - {{message}}
+{{/commits}}
+
+{{compare}}
+-
