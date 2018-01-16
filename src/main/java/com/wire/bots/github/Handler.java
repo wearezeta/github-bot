@@ -23,7 +23,12 @@ public class Handler {
         }
     }
 
-    private Mustache compileTemplate(String language, String event, String action) {
+    private Mustache compileTemplate(String language, String event, @Nullable String action) {
+        if (action == null) {
+            String path = String.format("templates/%s/%s.template", language, event);
+            return mf.compile(path);
+        }
+
         String path = String.format("templates/%s/%s.%s.template", language, event, action);
         return mf.compile(path);
     }

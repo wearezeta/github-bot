@@ -7,33 +7,33 @@ import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GitResponse {
-    @JsonProperty("action")
+    @JsonProperty
     public String action;
 
-    @JsonProperty("pull_request")
-    public PullRequest pr;
+    @JsonProperty
+    public PullRequest pull_request;
 
-    @JsonProperty("comment")
+    @JsonProperty
     public Comment comment;
 
-    @JsonProperty("issue")
+    @JsonProperty
     public Issue issue;
 
-    @JsonProperty("commits")
+    @JsonProperty
     public List<Commit> commits;
 
-    @JsonProperty("sender")
+    @JsonProperty
     public User sender;
 
-    @JsonProperty("compare")
+    @JsonProperty
     public String compare;
 
-    @JsonProperty("review")
+    @JsonProperty
     public Review review;
 
-    @JsonProperty("repository")
+    @JsonProperty
     public Repository repository;
 
-    @JsonProperty("created")
+    @JsonProperty
     public Boolean created;
 }

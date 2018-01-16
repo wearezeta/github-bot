@@ -44,7 +44,13 @@
     "updated_at": "2018-01-15T23:46:22Z",
     "closed_at": null,
     "author_association": "OWNER",
-    "body": "Test"
+    "body": "Test",
+    "pull_request": {
+      "url": "https://api.github.com/repos/Eva22/Integrations/pulls/5",
+      "html_url": "https://github.com/Eva22/Integrations/pull/5",
+      "diff_url": "https://github.com/Eva22/Integrations/pull/5.diff",
+      "patch_url": "https://github.com/Eva22/Integrations/pull/5.patch"
+    }
   },
   "comment": {
     "url": "https://api.github.com/repos/Eva22/Integrations/issues/comments/357814082",

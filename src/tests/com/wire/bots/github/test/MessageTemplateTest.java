@@ -41,6 +41,16 @@ public class MessageTemplateTest {
     public void issueCommentCreatedTest() throws IOException {
         test("issue_comment", "created");
     }
+
+    @Test
+    public void pullRequestOpenedTest() throws IOException {
+        test("pull_request", "opened");
+    }
+
+    @Test
+    public void pullRequestClosedTest() throws IOException {
+        test("pull_request", "closed");
+    }
     // ------------------- Tests -------------------
 
     private void test(String event, String action) throws IOException {
