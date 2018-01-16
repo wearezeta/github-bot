@@ -18,10 +18,14 @@ public class MessageTemplateTest {
 
     // ------------------- Tests -------------------
     @Test
-    public void commit_comment_Test() throws IOException {
+    public void commit_commentCreatedTest() throws IOException {
         test("commit_comment", "created");
     }
 
+    @Test
+    public void issueOpenedTest() throws IOException {
+        test("issue", "opened");
+    }
     // ------------------- Tests -------------------
 
     private void test(String event, String action) throws IOException {

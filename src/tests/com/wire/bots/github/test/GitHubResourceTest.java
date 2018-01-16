@@ -32,6 +32,13 @@ public class GitHubResourceTest {
         gitHubWebhookPost(event, payload);
     }
 
+    @Test
+    public void testOnPRCreated() {
+        String event = "pull_request";
+        String payload = FixtureHelpers.fixture("fixtures/events/" + event + ".created.json");
+        gitHubWebhookPost(event, payload);
+    }
+
     private void gitHubWebhookPost(String event, String payload) {
         Response response = resources.target("/github/botId")
                 .request()
