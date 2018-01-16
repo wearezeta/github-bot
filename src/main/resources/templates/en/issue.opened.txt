@@ -1,0 +1,6 @@
+**[{{repository.full_name}}]** Issue created by {{issue.user.login}}
+
+{{issue.html_url}}
+
+{{{issue.body}}}
+-
