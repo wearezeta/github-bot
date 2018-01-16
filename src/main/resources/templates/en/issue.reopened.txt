@@ -1,0 +1,4 @@
+**[{{repository.full_name}}]** Issue reopened by {{issue.user.login}}
+
+{{issue.html_url}}
+-
