@@ -35,6 +35,7 @@ public class BotService extends Server<BotConfig> {
 
     @Override
     protected void onRun(BotConfig botConfig, Environment env) {
-        addResource(new GitHubResource(repo, config), env);
+        Validator validator = new Validator(config.getCryptoDir());
+        addResource(new GitHubResource(repo, validator), env);
     }
 }

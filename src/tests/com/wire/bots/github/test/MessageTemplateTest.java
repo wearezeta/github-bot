@@ -7,51 +7,43 @@ import com.github.mustachejava.MustacheFactory;
 import com.wire.bots.github.model.GitResponse;
 import io.dropwizard.testing.FixtureHelpers;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.logging.Level;
 
 public class MessageTemplateTest {
     private static String[] locales = new String[]{"en"};
 
-    @BeforeClass
-    public static void init() {
-        java.util.logging.Logger logger = java.util.logging.Logger.getLogger("com.jcabi.manifests.Manifests");
-        logger.setLevel(Level.SEVERE);
-    }
-
     // ------------------- Tests -------------------
     @Test
     public void commit_comment_Test() throws IOException {
-        test("commit_comment");
+        test("commit_comment", "created");
     }
 
     // ------------------- Tests -------------------
 
-    private void test(String event) throws IOException {
-        String filename = String.format("fixtures/events/%s.json", event);
+    private void test(String event, String action) throws IOException {
+        String filename = String.format("fixtures/events/%s.%s.json", event, action);
         String payload = FixtureHelpers.fixture(filename);
         ObjectMapper mapper = new ObjectMapper();
         GitResponse gitResponse = mapper.readValue(payload, GitResponse.class);
 
         for (String locale : locales) {
-            Mustache mustache = compileTemplate(locale, event);
+            Mustache mustache = compileTemplate(locale, event, action);
             String message = execute(mustache, gitResponse);
 
-            String f = String.format("fixtures/messages/%s.txt", event);
+            String f = String.format("fixtures/messages/%s.%s.txt", event, action);
             String expected = FixtureHelpers.fixture(f);
 
             Assert.assertEquals("", expected, message);
         }
     }
 
-    private Mustache compileTemplate(String language, String event) {
+    private Mustache compileTemplate(String language, String event, String action) {
         MustacheFactory mf = new DefaultMustacheFactory();
-        String path = String.format("templates/%s/%s.txt", language, event);
+        String path = String.format("templates/%s/%s.%s.template", language, event, action);
         Mustache mustache = mf.compile(path);
         Assert.assertNotNull(path, mustache);
         return mustache;
