@@ -1,4 +1,4 @@
-**[{{repository.full_name}}]** Issue **{{issue.title}}** {{action}} by **{{issue.user.login}}**
+**[{{repository.full_name}}]** Issue **{{issue.title}}** {{action}} by **{{sender.login}}**
 
 {{issue.html_url}}
 -
