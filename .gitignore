@@ -6,3 +6,4 @@ crypto/
 *.log
 *.lck
 *.xml
+.DS_Store
