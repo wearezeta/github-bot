@@ -34,8 +34,6 @@ public class GitHubResource {
             @PathParam("botId") String botId,
             String payload) throws Exception {
 
-        Logger.info("%s\tBot: %s\t%s\tDelivery: %s", event, botId, signature, delivery);
-
         boolean valid = validator.isValid(botId, signature, payload);
         if (!valid) {
             Logger.warning("Invalid Signature. Bot: %s", botId);
@@ -53,6 +51,8 @@ public class GitHubResource {
         }
 
         GitResponse response = mapper.readValue(payload, GitResponse.class);
+
+        Logger.info("%s.%s\tBot: %s", event, response.action, botId);
 
         Handler handler = new Handler();
         String message = handler.handle(event, response);

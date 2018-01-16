@@ -38,8 +38,8 @@ public class MessageTemplateTest {
     }
 
     @Test
-    public void issuesCommentTest() throws IOException {
-        test("issues", "comment");
+    public void issueCommentCreatedTest() throws IOException {
+        test("issue_comment", "created");
     }
     // ------------------- Tests -------------------
 
