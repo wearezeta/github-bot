@@ -26,6 +26,21 @@ public class MessageTemplateTest {
     public void issueOpenedTest() throws IOException {
         test("issue", "opened");
     }
+
+    @Test
+    public void issueReopenedTest() throws IOException {
+        test("issue", "reopened");
+    }
+
+    @Test
+    public void issueClosedTest() throws IOException {
+        test("issue", "closed");
+    }
+
+    @Test
+    public void issueCommentTest() throws IOException {
+        test("issue", "comment");
+    }
     // ------------------- Tests -------------------
 
     private void test(String event, String action) throws IOException {
