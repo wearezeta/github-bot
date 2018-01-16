@@ -1,0 +1,4 @@
+**[{{repository.full_name}}]** Issue closed by {{issue.user.login}}
+
+{{issue.html_url}}
+-
