@@ -1,0 +1,4 @@
+**[{{repository.full_name}}]** New comment by **{{issue.user.login}}** on issue **{{issue.title}}**	
+
+{{comment.html_url}}
+—

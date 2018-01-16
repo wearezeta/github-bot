@@ -1,6 +1,6 @@
-**[{{repository.full_name}}]** Issue created by {{issue.user.login}}
-
-{{issue.html_url}}
+**[{{repository.full_name}}]** Issue {{action}} by **{{issue.user.login}}**
 
 {{{issue.body}}}
+
+{{issue.html_url}}
 -
