@@ -1,6 +1,6 @@
-**[Eva22/Integrations]** Push by **Eva22**
+**[wearezeta/github-bot]** Push by **dkovacevic**
 
- - Modified MD
+ - Added comment (conv, owner) to webhook link
 
-https://github.com/Eva22/Integrations/commit/b6b9b34a35f8
+https://github.com/wearezeta/github-bot/compare/e6bca012ad34...eca0bcbe1cfc
 —

@@ -57,6 +57,16 @@ public class MessageTemplateTest {
     public void pushTest() throws IOException {
         test("push", null);
     }
+
+    @Test
+    public void pull_request_reviewSubmittedTest() throws IOException {
+        test("pull_request_review", "submitted");
+    }
+
+    @Test
+    public void pull_request_review_commentCreatedTest() throws IOException {
+        test("pull_request_review_comment", "created");
+    }
     // ------------------- Tests -------------------
 
     private void test(String event, String action) throws IOException {
