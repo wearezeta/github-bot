@@ -10,7 +10,7 @@ import javax.annotation.Nullable;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-public class Handler {
+public class WebHookHandler {
     private final static MustacheFactory mf = new DefaultMustacheFactory();
 
     @Nullable

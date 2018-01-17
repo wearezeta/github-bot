@@ -1,8 +1,8 @@
 package com.wire.bots.github.resource;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wire.bots.github.Handler;
 import com.wire.bots.github.Validator;
+import com.wire.bots.github.WebHookHandler;
 import com.wire.bots.github.model.GitResponse;
 import com.wire.bots.sdk.ClientRepo;
 import com.wire.bots.sdk.Logger;
@@ -19,6 +19,7 @@ public class GitHubResource {
     private final ClientRepo repo;
     private final Validator validator;
     private final ObjectMapper mapper = new ObjectMapper();
+    private final WebHookHandler webHookHandler = new WebHookHandler();
 
     public GitHubResource(ClientRepo repo, Validator validator) {
         this.repo = repo;
@@ -54,8 +55,7 @@ public class GitHubResource {
 
         Logger.info("%s.%s\tBot: %s", event, response.action, botId);
 
-        Handler handler = new Handler();
-        String message = handler.handle(event, response);
+        String message = webHookHandler.handle(event, response);
         if (message != null)
             client.sendText(message);
 

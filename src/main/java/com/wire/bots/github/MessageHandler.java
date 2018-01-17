@@ -24,22 +24,39 @@ import com.wire.bots.sdk.MessageHandlerBase;
 import com.wire.bots.sdk.Util;
 import com.wire.bots.sdk.WireClient;
 import com.wire.bots.sdk.models.TextMessage;
+import com.wire.bots.sdk.server.model.Member;
 import com.wire.bots.sdk.server.model.NewBot;
+import com.wire.bots.sdk.server.model.User;
 
+import javax.annotation.Nullable;
 import java.io.File;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
 public class MessageHandler extends MessageHandlerBase {
     private final BotConfig config;
     private final SessionIdentifierGenerator sesGen = new SessionIdentifierGenerator();
 
-    public MessageHandler(BotConfig config) {
+    MessageHandler(BotConfig config) {
         this.config = config;
     }
 
     @Override
     public boolean onNewBot(NewBot newBot) {
-        Logger.info("New Bot: %s, Conv: %s, origin: %s", newBot.id, newBot.conversation.id, newBot.origin.name);
+        Logger.info(String.format("onNewBot: bot: %s, username: %s",
+                newBot.id,
+                newBot.origin.handle));
+
+        for (Member member : newBot.conversation.members) {
+            if (member.service != null) {
+                Logger.warning("Rejecting NewBot. Provider: %s service: %s",
+                        member.service.provider,
+                        member.service.id);
+                return false; // we don't want to be in a conv if other bots are there.
+            }
+        }
         return true;
     }
 
@@ -47,10 +64,10 @@ public class MessageHandler extends MessageHandlerBase {
     public void onNewConversation(WireClient client) {
         try {
             String secret = sesGen.next(6);
-            String botId = client.getId();
+            Util.writeLine(secret, new File(String.format("%s/%s/secret", config.getCryptoDir(), client.getId())));
 
-            Util.writeLine(secret, new File(String.format("%s/%s/secret", config.getCryptoDir(), botId)));
-            client.sendText(getHelp(config.getHost(), secret, botId), TimeUnit.MINUTES.toMillis(15));
+            String help = formatHelp(client);
+            client.sendText(help, TimeUnit.MINUTES.toMillis(15));
         } catch (Exception e) {
             Logger.error(e.getMessage());
         }
@@ -60,32 +77,49 @@ public class MessageHandler extends MessageHandlerBase {
     public void onText(WireClient client, TextMessage msg) {
         try {
             if (msg.getText().equalsIgnoreCase("/help")) {
-                String host = config.getHost();
-                String botId = client.getId();
-                String secret = Util.readLine(new File(String.format("%s/%s/secret", config.getCryptoDir(), botId)));
+                String help = formatHelp(client);
 
-                client.sendText(getHelp(host, secret, botId), TimeUnit.SECONDS.toMillis(60));
+                client.sendText(help, TimeUnit.SECONDS.toMillis(60));
             }
         } catch (Exception e) {
             Logger.error(e.getLocalizedMessage());
         }
     }
 
-    @Override
-    public void onBotRemoved(String botId) {
-        Logger.info("Bot: %s got removed from the conversation :(", botId);
+    private String formatHelp(WireClient client) throws IOException {
+        String botId = client.getId();
+        String host = config.getHost();
+        String secret = Util.readLine(new File(String.format("%s/%s/secret", config.getCryptoDir(), botId)));
+        String convName = client.getConversation().name;
+        String owner = getOwner(client, botId);
+
+        return formatHelp(host, secret, botId, convName, owner);
     }
 
-    private String getHelp(String host, String secret, String botId) {
+    @Nullable
+    private String getOwner(WireClient client, String botId) throws IOException {
+        File originFile = new File(String.format("%s/%s/origin.id", config.getCryptoDir(), botId));
+        if (!originFile.exists())
+            return null;
+        String origin = Util.readLine(originFile);
+        Collection<User> users = client.getUsers(Collections.singletonList(origin));
+        for (User user : users)
+            return user.handle;
+        return null;
+    }
+
+    private String formatHelp(String host, String secret, String botId, String convName, String owner) {
         return String.format("Hi, I'm GitHub-Bot. Here is how to set me up:\n\n"
                         + "1. Go to the repository that you want to connect to\n"
                         + "2. Go to **Settings / Webhooks / Add webhook**\n"
-                        + "3. Add **Payload URL**: https://%s/github/%s\n"
+                        + "3. Add **Payload URL**: https://%s/github/%s#%s,owner=%s\n"
                         + "4. Set **Content-Type**: application/json\n"
                         + "5. **Disable** SSL verification\n"
                         + "6. Set **Secret**: %s",
                 host,
                 botId,
+                convName,
+                owner,
                 secret);
     }
 }
