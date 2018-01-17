@@ -35,5 +35,9 @@ public class GitResponse {
     public Repository repository;
 
     @JsonProperty
-    public Boolean created;
+    public boolean created;
+
+    @JsonProperty
+    public boolean deleted;
+
 }

@@ -16,11 +16,14 @@ public class WebHookHandler {
     @Nullable
     public String handle(String event, GitResponse response) {
         try {
-            Mustache mustache = compileTemplate("en", event, response.action);
-            return execute(mustache, response);
+            if (!response.deleted) {
+                Mustache mustache = compileTemplate("en", event, response.action);
+                return execute(mustache, response);
+            }
         } catch (MustacheNotFoundException ex) {
             return null;
         }
+        return null;
     }
 
     private Mustache compileTemplate(String language, String event, @Nullable String action) {
