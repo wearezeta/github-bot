@@ -1,4 +1,4 @@
-**[{{repository.full_name}}]** Pull request **{{pull_request.title}}** was {{action}} by **{{sender.login}}**
+**[{{repository.full_name}}]** Pull request **{{{pull_request.title}}}** was {{action}} by **{{sender.login}}**
 
 {{pull_request.html_url}}
 -

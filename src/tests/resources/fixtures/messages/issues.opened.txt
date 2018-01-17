@@ -1,4 +1,4 @@
-**[Eva22/Integrations]** Issue **HitHub issue** opened by **Eva22**
+**[Eva22/Integrations]** Issue **This is 'Issue title'** opened by **Eva22**
 
 Test
 
