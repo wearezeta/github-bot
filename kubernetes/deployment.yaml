@@ -7,6 +7,7 @@ spec:
   replicas: 1
   template:
     metadata:
+      name: github
       labels:
         name: github
     spec:
@@ -34,6 +35,10 @@ spec:
                 secretKeyRef:
                   name: github-knows
                   key: keystore_password
+                  
+          ports:
+            - containerPort: 8080
+              protocol: TCP
 
           volumeMounts:
             - name: github-disk
@@ -41,6 +46,22 @@ spec:
 
             - name: github-config
               mountPath: /etc/github
+
+          livenessProbe:
+            httpGet:
+              path: /bots/status
+              port: 8080
+            initialDelaySeconds: 60
+            timeoutSeconds: 30
+            periodSeconds: 10
+
+          # for L7 LB
+          readinessProbe:
+            httpGet:
+              path: /bots/status
+              port: 8080
+            initialDelaySeconds: 60
+            timeoutSeconds: 30
 
           command:
             - "/usr/bin/java"
@@ -62,7 +83,6 @@ spec:
             name: github-config
 
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
@@ -70,8 +90,9 @@ metadata:
 spec:
   selector:
     name: github
-  type: LoadBalancer
+  type: NodePort
   ports:
-    - name: https
-      port: 443
+    - name: http
+      port: 80
+      targetPort: 8080
       protocol: TCP

@@ -1,18 +1,17 @@
 server:
   applicationConnectors:
     - type: http
-      port: 8049
+      port: 8080
     - type: https
       port: 443
       keyStorePath: keystore.jks
-      keyStorePassword: your_secret
       certAlias: myservercert
       validateCerts: false
       validatePeers: false
 
   adminConnectors:
     - type: http
-      port: 8051
+      port: 8081
   requestLog:
     appenders: []
 
