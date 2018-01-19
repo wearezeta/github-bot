@@ -1,0 +1,46 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: https-lb
+  annotations:
+    kubernetes.io/ingress.allowHTTP: "false"
+spec:
+  tls:
+  - secretName: tls-selfsigned
+
+  rules:
+  - host: github.services.wire.com
+    http:
+      paths:
+      - backend:
+          serviceName: github
+          servicePort: 80
+
+  - host: don.services.wire.com
+    http:
+      paths:
+      - backend:
+          serviceName: don
+          servicePort: 80
+
+  - host: anna.services.wire.com
+    http:
+      paths:
+      - backend:
+          serviceName: anna
+          servicePort: 80
+
+  - host: cali.services.wire.com
+    http:
+      paths:
+      - backend:
+          serviceName: cali
+          servicePort: 80
+
+  - host: echo.services.wire.com
+    http:
+      paths:
+      - backend:
+          serviceName: echo
+          servicePort: 80
