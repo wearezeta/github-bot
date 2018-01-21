@@ -13,7 +13,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Consumes(MediaType.APPLICATION_JSON)
-@Path("/github")
+@Path("/{botId}")
 public class GitHubResource {
 
     private final ClientRepo repo;
@@ -27,7 +27,6 @@ public class GitHubResource {
     }
 
     @POST
-    @Path("/{botId}")
     public Response webHook(
             @HeaderParam("X-GitHub-Event") String event,
             @HeaderParam("X-Hub-Signature") String signature,

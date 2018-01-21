@@ -112,7 +112,7 @@ public class MessageHandler extends MessageHandlerBase {
         return String.format("Hi, I'm GitHub-Bot. Here is how to set me up:\n\n"
                         + "1. Go to the repository that you want to connect to\n"
                         + "2. Go to **Settings / Webhooks / Add webhook**\n"
-                        + "3. Add **Payload URL**: https://%s/github/%s#%s,owner=%s\n"
+                        + "3. Add **Payload URL**: https://%s/%s#%s,owner=%s\n"
                         + "4. Set **Content-Type**: application/json\n"
                         + "5. **Disable** SSL verification\n"
                         + "6. Set **Secret**: %s",

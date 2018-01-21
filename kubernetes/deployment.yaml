@@ -29,12 +29,6 @@ spec:
                 secretKeyRef:
                   name: github-knows
                   key: token
-
-            - name: KEYSTORE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: github-knows
-                  key: keystore_password
                   
           ports:
             - containerPort: 8080
@@ -65,8 +59,8 @@ spec:
 
           command:
             - "/usr/bin/java"
-            - "-Ddw.server.applicationConnectors[1].keyStorePassword=$(KEYSTORE_PASSWORD)"
             - "-Ddw.auth=$(TOKEN)"
+            - "-Denv=staging"
             - "-jar"
             - "github.jar"
             - "server"
