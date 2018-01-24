@@ -2,19 +2,19 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: github
+  name: github-prod
 spec:
   replicas: 1
   template:
     metadata:
-      name: github
+      name: github-prod
       labels:
-        name: github
+        name: github-prod
     spec:
       restartPolicy: Always
 
       containers:
-        - name: github
+        - name: github-prod
           image: eu.gcr.io/wire-bot/github:latest
 
           resources:
@@ -27,7 +27,7 @@ spec:
             - name: TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: github-knows
+                  name: github
                   key: token
                   
           ports:
@@ -60,7 +60,7 @@ spec:
           command:
             - "/usr/bin/java"
             - "-Ddw.auth=$(TOKEN)"
-            - "-Denv=staging"
+            - "-Denv=prod"
             - "-jar"
             - "github.jar"
             - "server"
@@ -69,7 +69,7 @@ spec:
       volumes:
         - name: disk
           gcePersistentDisk:
-            pdName: github-disk
+            pdName: github-disk-prod
             fsType: ext4
 
         - name: config
@@ -80,10 +80,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: github
+  name: github-prod
 spec:
   selector:
-    name: github
+    name: github-prod
   type: NodePort
   ports:
     - name: http
