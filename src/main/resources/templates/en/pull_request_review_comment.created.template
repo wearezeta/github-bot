@@ -2,5 +2,5 @@
 
 {{{comment.body}}}
 
-{{pull_request.html_url}}
+{{comment.html_url}}
 —
