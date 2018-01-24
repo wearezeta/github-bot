@@ -31,6 +31,7 @@ import com.wire.bots.sdk.server.model.User;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
@@ -88,12 +89,33 @@ public class MessageHandler extends MessageHandlerBase {
 
     private String formatHelp(WireClient client) throws IOException {
         String botId = client.getId();
-        String host = config.getHost();
+        String host = getHost();
         String secret = Util.readLine(new File(String.format("%s/%s/secret", config.getCryptoDir(), botId)));
-        String convName = client.getConversation().name;
+        String convName = URLEncoder.encode(client.getConversation().name, "UTF-8");
         String owner = getOwner(client, botId);
 
-        return formatHelp(host, secret, botId, convName, owner);
+        String url = String.format("https://%s/%s#%s,owner=%s", host, botId, convName, owner);
+        return formatHelp(url, secret);
+    }
+
+    private String formatHelp(String url, String secret) {
+        return String.format("Hi, I'm GitHub-Bot. Here is how to set me up:\n\n"
+                        + "1. Go to the repository that you want to connect to\n"
+                        + "2. Go to **Settings / Webhooks / Add webhook**\n"
+                        + "3. Add **Payload URL**: %s\n"
+                        + "4. Set **Content-Type**: application/json\n"
+                        + "5. **Disable** SSL verification\n"
+                        + "6. Set **Secret**: %s",
+                url,
+                secret);
+    }
+
+    private String getHost() {
+        String env = System.getProperty("env", "prod");
+        if (env.equalsIgnoreCase("prod"))
+            return "https://github.services.wire.com";
+        else
+            return "https://github-stage.services.wire.com";
     }
 
     @Nullable
@@ -106,20 +128,5 @@ public class MessageHandler extends MessageHandlerBase {
         for (User user : users)
             return user.handle;
         return null;
-    }
-
-    private String formatHelp(String host, String secret, String botId, String convName, String owner) {
-        return String.format("Hi, I'm GitHub-Bot. Here is how to set me up:\n\n"
-                        + "1. Go to the repository that you want to connect to\n"
-                        + "2. Go to **Settings / Webhooks / Add webhook**\n"
-                        + "3. Add **Payload URL**: https://%s/%s#%s,owner=%s\n"
-                        + "4. Set **Content-Type**: application/json\n"
-                        + "5. **Disable** SSL verification\n"
-                        + "6. Set **Secret**: %s",
-                host,
-                botId,
-                convName,
-                owner,
-                secret);
     }
 }
