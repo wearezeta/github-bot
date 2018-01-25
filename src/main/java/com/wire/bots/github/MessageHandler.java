@@ -113,9 +113,9 @@ public class MessageHandler extends MessageHandlerBase {
     private String getHost() {
         String env = System.getProperty("env", "prod");
         if (env.equalsIgnoreCase("prod"))
-            return "https://github.services.wire.com";
+            return "github.services.wire.com";
         else
-            return "https://github-stage.services.wire.com";
+            return "github-stage.services.wire.com";
     }
 
     @Nullable

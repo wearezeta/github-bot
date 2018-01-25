@@ -55,7 +55,7 @@ public class GitHubResource {
         Logger.info("%s.%s\tBot: %s", event, response.action, botId);
 
         String message = webHookHandler.handle(event, response);
-        if (message != null)
+        if (message != null && !message.isEmpty())
             client.sendText(message);
 
         return Response.

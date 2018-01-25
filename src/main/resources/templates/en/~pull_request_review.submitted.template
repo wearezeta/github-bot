@@ -1,6 +1,0 @@
-**[{{repository.full_name}}]** Pull request review **{{pull_request.title}}** was {{action}} by **{{review.user.login}}** 
-
-{{{review.body}}}
-
-{{pull_request.html_url}}
-—

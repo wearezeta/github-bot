@@ -58,10 +58,10 @@ public class MessageTemplateTest {
         test("push", null);
     }
 
-//    @Test
-//    public void pull_request_reviewSubmittedTest() throws IOException {
-//        test("pull_request_review", "submitted");
-//    }
+    @Test
+    public void pull_request_reviewSubmittedTest() throws IOException {
+        test("pull_request_review", "submitted");
+    }
 
     @Test
     public void pull_request_review_commentCreatedTest() throws IOException {

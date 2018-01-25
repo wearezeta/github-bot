@@ -7,14 +7,35 @@ metadata:
     kubernetes.io/ingress.allowHTTP: "false"
 spec:
   tls:
-  - secretName: tls-selfsigned
+  - secretName: tls-echo-selfsigned
 
   rules:
   - host: github.services.wire.com
     http:
       paths:
       - backend:
+          serviceName: github-prod
+          servicePort: 80
+
+  - host: github-stage.services.wire.com
+    http:
+      paths:
+      - backend:
           serviceName: github
+          servicePort: 80
+
+  - host: echo.services.wire.com
+    http:
+      paths:
+      - backend:
+          serviceName: echo-prod
+          servicePort: 80
+
+  - host: echo-stage.services.wire.com
+    http:
+      paths:
+      - backend:
+          serviceName: echo
           servicePort: 80
 
   - host: don.services.wire.com
@@ -22,25 +43,4 @@ spec:
       paths:
       - backend:
           serviceName: don
-          servicePort: 80
-
-  - host: anna.services.wire.com
-    http:
-      paths:
-      - backend:
-          serviceName: anna
-          servicePort: 80
-
-  - host: cali.services.wire.com
-    http:
-      paths:
-      - backend:
-          serviceName: cali
-          servicePort: 80
-
-  - host: echo.services.wire.com
-    http:
-      paths:
-      - backend:
-          serviceName: echo
           servicePort: 80
