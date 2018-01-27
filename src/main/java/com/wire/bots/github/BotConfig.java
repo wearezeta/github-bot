@@ -18,10 +18,9 @@
 
 package com.wire.bots.github;
 
-public class BotConfig extends com.wire.bots.sdk.Configuration {
-    public String host;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-    public String getHost() {
-        return host;
-    }
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class BotConfig extends com.wire.bots.sdk.Configuration {
+
 }

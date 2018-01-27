@@ -6,5 +6,5 @@ server:
   requestLog:
     appenders: []
 
-host: github.services.wire.com
+auth: "your_token"
 cryptoDir: /var/lib/github/crypto

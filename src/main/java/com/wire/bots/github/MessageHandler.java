@@ -18,6 +18,7 @@
 
 package com.wire.bots.github;
 
+import com.wire.bots.github.utils.Domain;
 import com.wire.bots.github.utils.SessionIdentifierGenerator;
 import com.wire.bots.sdk.Logger;
 import com.wire.bots.sdk.MessageHandlerBase;
@@ -99,23 +100,18 @@ public class MessageHandler extends MessageHandlerBase {
     }
 
     private String formatHelp(String url, String secret) {
-        return String.format("Hi, I'm GitHub-Bot. Here is how to set me up:\n\n"
+        return String.format("Hi, I'm GitHub bot. Here is how to set me up:\n\n"
                         + "1. Go to the repository that you want to connect to\n"
                         + "2. Go to **Settings / Webhooks / Add webhook**\n"
                         + "3. Add **Payload URL**: %s\n"
                         + "4. Set **Content-Type**: application/json\n"
-                        + "5. **Disable** SSL verification\n"
-                        + "6. Set **Secret**: %s",
+                        + "5. Set **Secret**: %s",
                 url,
                 secret);
     }
 
     private String getHost() {
-        String env = System.getProperty("env", "prod");
-        if (env.equalsIgnoreCase("prod"))
-            return "github.services.wire.com";
-        else
-            return "github-stage.services.wire.com";
+        return "github.services." + Domain.getDomain();
     }
 
     @Nullable
