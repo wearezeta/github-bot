@@ -1,3 +1,4 @@
+{{^commits.isEmpty}}
 **[{{repository.full_name}}]** Push by **{{sender.login}}**
 
 {{#commits}}
@@ -5,4 +6,4 @@
 {{/commits}}
 
 {{compare}}
-—
+—{{/commits.isEmpty}}
