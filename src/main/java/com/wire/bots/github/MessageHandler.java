@@ -71,6 +71,7 @@ public class MessageHandler extends MessageHandlerBase {
             String help = formatHelp(client);
             client.sendText(help, TimeUnit.MINUTES.toMillis(15));
         } catch (Exception e) {
+            e.printStackTrace();
             Logger.error(e.getMessage());
         }
     }
@@ -84,6 +85,7 @@ public class MessageHandler extends MessageHandlerBase {
                 client.sendText(help, TimeUnit.SECONDS.toMillis(60));
             }
         } catch (Exception e) {
+            e.printStackTrace();
             Logger.error(e.getLocalizedMessage());
         }
     }
@@ -92,10 +94,11 @@ public class MessageHandler extends MessageHandlerBase {
         String botId = client.getId();
         String host = getHost();
         String secret = Util.readLine(new File(String.format("%s/%s/secret", config.getCryptoDir(), botId)));
-        String convName = URLEncoder.encode(client.getConversation().name, "UTF-8");
+        String name = client.getConversation().name;
+        String convName = name != null ? URLEncoder.encode(name, "UTF-8") : "";
         String owner = getOwner(client, botId);
 
-        String url = String.format("https://%s/%s#%s,owner=%s", host, botId, convName, owner);
+        String url = String.format("https://%s/%s#conv=%s,owner=@%s", host, botId, convName, owner);
         return formatHelp(url, secret);
     }
 

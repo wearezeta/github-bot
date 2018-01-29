@@ -12,7 +12,35 @@
       "id": "eca0bcbe1cfc18f332f37bb20a3a7635baf8e52f",
       "tree_id": "f0093efa9c844f3db00ecf9fb37459d3bc65950a",
       "distinct": true,
-      "message": "Added comment (conv, owner) to webhook link",
+      "message": "Commit 1",
+      "timestamp": "2018-01-17T13:23:51+01:00",
+      "url": "https://github.com/wearezeta/github-bot/commit/eca0bcbe1cfc18f332f37bb20a3a7635baf8e52f",
+      "author": {
+        "name": "dkovacevic",
+        "email": "dejankov@gmail.com",
+        "username": "dkovacevic"
+      },
+      "committer": {
+        "name": "dkovacevic",
+        "email": "dejankov@gmail.com",
+        "username": "dkovacevic"
+      },
+      "added": [
+        "src/main/java/com/wire/bots/github/WebHookHandler.java"
+      ],
+      "removed": [
+        "src/main/java/com/wire/bots/github/Handler.java"
+      ],
+      "modified": [
+        "src/main/java/com/wire/bots/github/MessageHandler.java",
+        "src/main/java/com/wire/bots/github/resource/GitHubResource.java"
+      ]
+    },
+    {
+      "id": "eca0bcbe1cfc18f332f37bb20a3a7635baf8e52f",
+      "tree_id": "f0093efa9c844f3db00ecf9fb37459d3bc65950a",
+      "distinct": true,
+      "message": "Commit 2",
       "timestamp": "2018-01-17T13:23:51+01:00",
       "url": "https://github.com/wearezeta/github-bot/commit/eca0bcbe1cfc18f332f37bb20a3a7635baf8e52f",
       "author": {
