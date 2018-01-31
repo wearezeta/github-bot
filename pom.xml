@@ -8,16 +8,13 @@
     <groupId>com.wire.bots</groupId>
     <version>0.2.0</version>
 
-    <properties>
-        <bot.version>1.0.6</bot.version>
-    </properties>
-
     <repositories>
         <repository>
-            <id>bintray</id>
-            <name>Bintray</name>
-            <url>https://dl.bintray.com/wire-android/snapshots/</url>
-            <layout>default</layout>
+            <id>lithium</id>
+            <url>https://packagecloud.io/dkovacevic/lithium/maven2</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
         </repository>
     </repositories>
 
@@ -64,8 +61,8 @@
     <dependencies>
         <dependency>
             <groupId>com.wire.bots</groupId>
-            <artifactId>bot-sdk</artifactId>
-            <version>${bot.version}</version>
+            <artifactId>lithium</artifactId>
+            <version>1.1.2</version>
         </dependency>
         <dependency>
             <groupId>com.github.spullara.mustache.java</groupId>
