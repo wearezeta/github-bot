@@ -47,14 +47,14 @@ public class MessageHandler extends MessageHandlerBase {
 
     @Override
     public boolean onNewBot(NewBot newBot) {
-        Logger.info(String.format("onNewBot: bot: %s, username: %s",
+        Logger.info(String.format("onNewBot: bot: %s, user: %s",
                 newBot.id,
-                newBot.origin.handle));
+                newBot.origin.id));
 
         for (Member member : newBot.conversation.members) {
             if (member.service != null) {
-                Logger.warning("Rejecting NewBot. Provider: %s service: %s",
-                        member.service.provider,
+                Logger.warning("Rejecting NewBot. user: %s service: %s",
+                        newBot.origin.id,
                         member.service.id);
                 return false; // we don't want to be in a conv if other bots are there.
             }
