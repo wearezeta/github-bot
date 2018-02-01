@@ -19,9 +19,9 @@ before_install:
      curl https://sdk.cloud.google.com | bash;
   fi
 
-- if [ ! -d ${HOME}/google-cloud-sdk/bin/kubectl ]; then
-     gcloud components install kubectl;
-  fi
+#- if [ ! -d ${HOME}/google-cloud-sdk/bin/kubectl ]; then
+#     gcloud components install kubectl;
+#  fi
   
 - mkdir -p lib
 
