@@ -6,4 +6,4 @@ crypto/
 *.log
 *.lck
 *.xml
-.DS_Store
+client-secret.json

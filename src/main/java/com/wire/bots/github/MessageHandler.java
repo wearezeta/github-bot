@@ -18,7 +18,6 @@
 
 package com.wire.bots.github;
 
-import com.wire.bots.github.utils.Domain;
 import com.wire.bots.github.utils.SessionIdentifierGenerator;
 import com.wire.bots.sdk.Logger;
 import com.wire.bots.sdk.MessageHandlerBase;
@@ -114,7 +113,7 @@ public class MessageHandler extends MessageHandlerBase {
     }
 
     private String getHost() {
-        return "github.services." + Domain.getDomain();
+        return "github.services." + Util.getDomain();
     }
 
     @Nullable
