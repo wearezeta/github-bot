@@ -17,12 +17,15 @@ before_install:
 # If the SDK is not already cached, download it and unpack it
 - if [ ! -d ${HOME}/google-cloud-sdk ]; then
      curl https://sdk.cloud.google.com | bash;
-     gcloud components install kubectl;
   fi
 
+- if [ ! -d ${HOME}/google-cloud-sdk/bin/kubectl ]; then
+     gcloud components install kubectl;
+  fi
+  
 - mkdir -p lib
 
 - gcloud auth activate-service-account --key-file client-secret.json
 
 script:
-#- kubectl delete pod -l name=github -n staging
+- kubectl delete pod -l name=github -n staging
