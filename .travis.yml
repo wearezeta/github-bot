@@ -25,4 +25,4 @@ before_install:
 - gcloud auth activate-service-account --key-file client-secret.json
 
 script:
-- kubectl delete pod -l name=github -n staging
+#- kubectl delete pod -l name=github -n staging
