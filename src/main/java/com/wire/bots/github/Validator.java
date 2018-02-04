@@ -1,6 +1,6 @@
 package com.wire.bots.github;
 
-import com.wire.bots.sdk.Util;
+import com.wire.bots.sdk.tools.Util;
 
 import java.io.File;
 

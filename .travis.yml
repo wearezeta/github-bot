@@ -7,9 +7,12 @@ cache:
 services:
 - docker
 after_success:
-- if [[ "$TRAVIS_BRANCH" == "master" ]]; then docker login -u $DOCKER_USERNAME -p
-  $DOCKER_PASSWORD ; docker build -t dejankovacevic/github-bot:latest
-  . ; docker push dejankovacevic/github-bot ; fi
+- if [[ "$TRAVIS_BRANCH" == "master" ]]; then
+  docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD ;
+  docker build -t dejankovacevic/github-bot:latest . ;
+  docker push dejankovacevic/github-bot ;
+fi
+
 before_install:
 - openssl aes-256-cbc -K $encrypted_941c9d24308c_key -iv $encrypted_941c9d24308c_iv
   -in client-secret.json.enc -out client-secret.json -d

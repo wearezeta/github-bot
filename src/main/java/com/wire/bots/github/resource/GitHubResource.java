@@ -5,8 +5,8 @@ import com.wire.bots.github.Validator;
 import com.wire.bots.github.WebHookHandler;
 import com.wire.bots.github.model.GitResponse;
 import com.wire.bots.sdk.ClientRepo;
-import com.wire.bots.sdk.Logger;
 import com.wire.bots.sdk.WireClient;
+import com.wire.bots.sdk.tools.Logger;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -18,12 +18,12 @@ public class GitHubResource {
 
     private final ClientRepo repo;
     private final Validator validator;
-    private final ObjectMapper mapper = new ObjectMapper();
-    private final WebHookHandler webHookHandler = new WebHookHandler();
+    private final WebHookHandler webHookHandler;
 
     public GitHubResource(ClientRepo repo, Validator validator) {
         this.repo = repo;
         this.validator = validator;
+        webHookHandler = new WebHookHandler();
     }
 
     @POST
@@ -50,6 +50,7 @@ public class GitHubResource {
                     build();
         }
 
+        ObjectMapper mapper = new ObjectMapper();
         GitResponse response = mapper.readValue(payload, GitResponse.class);
 
         Logger.info("%s.%s\tBot: %s", event, response.action, botId);

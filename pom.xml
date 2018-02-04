@@ -6,12 +6,19 @@
 
     <artifactId>github-bot</artifactId>
     <groupId>com.wire.bots</groupId>
-    <version>0.2.0</version>
+    <version>0.3.0</version>
 
     <repositories>
         <repository>
             <id>lithium</id>
             <url>https://packagecloud.io/dkovacevic/lithium/maven2</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+        <repository>
+            <id>cryptonite</id>
+            <url>https://packagecloud.io/dkovacevic/cryptonite/maven2</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -62,7 +69,12 @@
         <dependency>
             <groupId>com.wire.bots</groupId>
             <artifactId>lithium</artifactId>
-            <version>1.1.3</version>
+            <version>2.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.wire.bots</groupId>
+            <artifactId>cryptonite</artifactId>
+            <version>1.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.github.spullara.mustache.java</groupId>

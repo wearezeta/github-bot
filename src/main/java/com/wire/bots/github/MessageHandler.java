@@ -19,29 +19,29 @@
 package com.wire.bots.github;
 
 import com.wire.bots.github.utils.SessionIdentifierGenerator;
-import com.wire.bots.sdk.Logger;
 import com.wire.bots.sdk.MessageHandlerBase;
-import com.wire.bots.sdk.Util;
 import com.wire.bots.sdk.WireClient;
+import com.wire.bots.sdk.factories.StorageFactory;
 import com.wire.bots.sdk.models.TextMessage;
 import com.wire.bots.sdk.server.model.Member;
 import com.wire.bots.sdk.server.model.NewBot;
 import com.wire.bots.sdk.server.model.User;
+import com.wire.bots.sdk.tools.Logger;
+import com.wire.bots.sdk.tools.Util;
 
 import javax.annotation.Nullable;
-import java.io.File;
-import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
 public class MessageHandler extends MessageHandlerBase {
-    private final BotConfig config;
+    private static final String SECRET_FILE = "secret";
     private final SessionIdentifierGenerator sesGen = new SessionIdentifierGenerator();
+    private final StorageFactory storageFactory;
 
-    MessageHandler(BotConfig config) {
-        this.config = config;
+    MessageHandler(StorageFactory storageFactory) {
+        this.storageFactory = storageFactory;
     }
 
     @Override
@@ -65,7 +65,7 @@ public class MessageHandler extends MessageHandlerBase {
     public void onNewConversation(WireClient client) {
         try {
             String secret = sesGen.next(6);
-            Util.writeLine(secret, new File(String.format("%s/%s/secret", config.getCryptoDir(), client.getId())));
+            storageFactory.create(client.getId()).saveFile(SECRET_FILE, secret);
 
             String help = formatHelp(client);
             client.sendText(help, TimeUnit.MINUTES.toMillis(15));
@@ -89,13 +89,13 @@ public class MessageHandler extends MessageHandlerBase {
         }
     }
 
-    private String formatHelp(WireClient client) throws IOException {
+    private String formatHelp(WireClient client) throws Exception {
         String botId = client.getId();
         String host = getHost();
-        String secret = Util.readLine(new File(String.format("%s/%s/secret", config.getCryptoDir(), botId)));
+        String secret = storageFactory.create(botId).readFile(SECRET_FILE);
         String name = client.getConversation().name;
         String convName = name != null ? URLEncoder.encode(name, "UTF-8") : "";
-        String owner = getOwner(client, botId);
+        String owner = getOwner(client);
 
         String url = String.format("https://%s/%s#conv=%s,owner=@%s", host, botId, convName, owner);
         return formatHelp(url, secret);
@@ -103,7 +103,7 @@ public class MessageHandler extends MessageHandlerBase {
 
     private String formatHelp(String url, String secret) {
         return String.format("Hi, I'm GitHub bot. Here is how to set me up:\n\n"
-                        + "1. Go to the repository that you want to connect to\n"
+                        + "1. Go to the repository that you would like to connect to\n"
                         + "2. Go to **Settings / Webhooks / Add webhook**\n"
                         + "3. Add **Payload URL**: %s\n"
                         + "4. Set **Content-Type**: application/json\n"
@@ -117,12 +117,10 @@ public class MessageHandler extends MessageHandlerBase {
     }
 
     @Nullable
-    private String getOwner(WireClient client, String botId) throws IOException {
-        File originFile = new File(String.format("%s/%s/origin.id", config.getCryptoDir(), botId));
-        if (!originFile.exists())
-            return null;
-        String origin = Util.readLine(originFile);
-        Collection<User> users = client.getUsers(Collections.singletonList(origin));
+    private String getOwner(WireClient client) throws Exception {
+        String botId = client.getId();
+        NewBot state = storageFactory.create(botId).getState();
+        Collection<User> users = client.getUsers(Collections.singletonList(state.origin.id));
         for (User user : users)
             return user.handle;
         return null;

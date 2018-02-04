@@ -7,4 +7,4 @@ server:
     appenders: []
 
 auth: "your_token"
-cryptoDir: /var/lib/github/crypto
+data: ./data

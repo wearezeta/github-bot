@@ -18,9 +18,15 @@
 
 package com.wire.bots.github;
 
+import com.wire.bots.cryptonite.CryptoService;
+import com.wire.bots.cryptonite.StorageService;
+import com.wire.bots.cryptonite.client.CryptoClient;
+import com.wire.bots.cryptonite.client.StorageClient;
 import com.wire.bots.github.resource.GitHubResource;
 import com.wire.bots.sdk.MessageHandlerBase;
 import com.wire.bots.sdk.Server;
+import com.wire.bots.sdk.factories.CryptoFactory;
+import com.wire.bots.sdk.factories.StorageFactory;
 import io.dropwizard.setup.Environment;
 
 public class BotService extends Server<BotConfig> {
@@ -30,12 +36,22 @@ public class BotService extends Server<BotConfig> {
 
     @Override
     protected MessageHandlerBase createHandler(BotConfig config, Environment env) {
-        return new MessageHandler(config);
+        return new MessageHandler(getStorageFactory(config));
     }
 
     @Override
     protected void onRun(BotConfig botConfig, Environment env) {
-        Validator validator = new Validator(config.getCryptoDir());
+        Validator validator = new Validator(config.data);
         addResource(new GitHubResource(repo, validator), env);
+    }
+
+    @Override
+    protected StorageFactory getStorageFactory(BotConfig config) {
+        return botId -> new StorageService("github", botId, new StorageClient(config.data));
+    }
+
+    @Override
+    protected CryptoFactory getCryptoFactory(BotConfig config) {
+        return (botId) -> new CryptoService(botId, new CryptoClient(config.data));
     }
 }
