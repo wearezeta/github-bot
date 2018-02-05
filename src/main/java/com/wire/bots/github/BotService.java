@@ -20,14 +20,14 @@ package com.wire.bots.github;
 
 import com.wire.bots.cryptonite.CryptoService;
 import com.wire.bots.cryptonite.StorageService;
-import com.wire.bots.cryptonite.client.CryptoClient;
-import com.wire.bots.cryptonite.client.StorageClient;
 import com.wire.bots.github.resource.GitHubResource;
 import com.wire.bots.sdk.MessageHandlerBase;
 import com.wire.bots.sdk.Server;
 import com.wire.bots.sdk.factories.CryptoFactory;
 import com.wire.bots.sdk.factories.StorageFactory;
 import io.dropwizard.setup.Environment;
+
+import java.net.URI;
 
 public class BotService extends Server<BotConfig> {
     public static void main(String[] args) throws Exception {
@@ -47,11 +47,11 @@ public class BotService extends Server<BotConfig> {
 
     @Override
     protected StorageFactory getStorageFactory(BotConfig config) {
-        return botId -> new StorageService("github", botId, new StorageClient(config.data));
+        return botId -> new StorageService("github", botId, new URI(config.data));
     }
 
     @Override
     protected CryptoFactory getCryptoFactory(BotConfig config) {
-        return (botId) -> new CryptoService(botId, new CryptoClient(config.data));
+        return (botId) -> new CryptoService(botId, new URI(config.data));
     }
 }
