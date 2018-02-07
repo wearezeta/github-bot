@@ -30,6 +30,9 @@ import io.dropwizard.setup.Environment;
 import java.net.URI;
 
 public class BotService extends Server<BotConfig> {
+
+    private static final String SERVICE = "github";
+
     public static void main(String[] args) throws Exception {
         new BotService().run(args);
     }
@@ -47,11 +50,11 @@ public class BotService extends Server<BotConfig> {
 
     @Override
     protected StorageFactory getStorageFactory(BotConfig config) {
-        return botId -> new StorageService("github", botId, new URI(config.data));
+        return botId -> new StorageService(SERVICE, botId, new URI(config.data));
     }
 
     @Override
     protected CryptoFactory getCryptoFactory(BotConfig config) {
-        return (botId) -> new CryptoService(botId, new URI(config.data));
+        return (botId) -> new CryptoService(SERVICE, botId, new URI(config.data));
     }
 }
