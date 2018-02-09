@@ -21,6 +21,6 @@ package com.wire.bots.github;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class BotConfig extends com.wire.bots.sdk.Configuration {
+public class Config extends com.wire.bots.sdk.Configuration {
 
 }

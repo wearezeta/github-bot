@@ -20,6 +20,8 @@ package com.wire.bots.github;
 
 import com.wire.bots.cryptonite.CryptoService;
 import com.wire.bots.cryptonite.StorageService;
+import com.wire.bots.cryptonite.client.CryptoClient;
+import com.wire.bots.cryptonite.client.StorageClient;
 import com.wire.bots.github.resource.GitHubResource;
 import com.wire.bots.sdk.MessageHandlerBase;
 import com.wire.bots.sdk.Server;
@@ -29,32 +31,40 @@ import io.dropwizard.setup.Environment;
 
 import java.net.URI;
 
-public class BotService extends Server<BotConfig> {
+public class Service extends Server<Config> {
 
     private static final String SERVICE = "github";
+    private StorageClient storageClient;
+    private CryptoClient cryptoClient;
 
     public static void main(String[] args) throws Exception {
-        new BotService().run(args);
+        new Service().run(args);
     }
 
     @Override
-    protected MessageHandlerBase createHandler(BotConfig config, Environment env) {
+    protected void initialize(Config config, Environment env) throws Exception {
+        storageClient = new StorageClient(SERVICE, new URI(config.data));
+        cryptoClient = new CryptoClient(SERVICE, new URI(config.data));
+    }
+
+    @Override
+    protected MessageHandlerBase createHandler(Config config, Environment env) {
         return new MessageHandler(getStorageFactory(config));
     }
 
     @Override
-    protected void onRun(BotConfig botConfig, Environment env) {
+    protected void onRun(Config config, Environment env) {
         Validator validator = new Validator(config.data);
         addResource(new GitHubResource(repo, validator), env);
     }
 
     @Override
-    protected StorageFactory getStorageFactory(BotConfig config) {
-        return botId -> new StorageService(SERVICE, botId, new URI(config.data));
+    protected StorageFactory getStorageFactory(Config config) {
+        return botId -> new StorageService(botId, storageClient);
     }
 
     @Override
-    protected CryptoFactory getCryptoFactory(BotConfig config) {
-        return (botId) -> new CryptoService(SERVICE, botId, new URI(config.data));
+    protected CryptoFactory getCryptoFactory(Config config) {
+        return (botId) -> new CryptoService(botId, cryptoClient);
     }
 }
