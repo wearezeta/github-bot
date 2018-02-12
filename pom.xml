@@ -6,7 +6,7 @@
 
     <artifactId>github-bot</artifactId>
     <groupId>com.wire.bots</groupId>
-    <version>0.5.0</version>
+    <version>0.5.1</version>
 
     <repositories>
         <repository>
@@ -29,7 +29,7 @@
         <dependency>
             <groupId>com.wire.bots</groupId>
             <artifactId>lithium</artifactId>
-            <version>2.6.0</version>
+            <version>2.6.2</version>
         </dependency>
         <dependency>
             <groupId>com.wire.bots</groupId>

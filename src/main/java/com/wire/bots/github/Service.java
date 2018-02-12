@@ -54,7 +54,8 @@ public class Service extends Server<Config> {
 
     @Override
     protected void onRun(Config config, Environment env) {
-        Validator validator = new Validator(config.data);
+        StorageFactory storageFactory = getStorageFactory(config);
+        Validator validator = new Validator(storageFactory);
         addResource(new GitHubResource(repo, validator), env);
     }
 
