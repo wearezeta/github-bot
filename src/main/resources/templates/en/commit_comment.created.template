@@ -3,5 +3,5 @@
 **Comment on line {{comment.line}} by {{comment.user.login}}**
 {{{comment.body}}}
 
-{{comment.html_url}}
+[comment]({{comment.html_url}})
 —
