@@ -2,5 +2,5 @@
 
 {{{issue.body}}}
 
-{{issue.html_url}}
+[issue]({{issue.html_url}})
 —

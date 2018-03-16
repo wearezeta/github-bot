@@ -32,32 +32,41 @@ public class GitHubResource {
             @HeaderParam("X-Hub-Signature") String signature,
             @HeaderParam("X-GitHub-Delivery") String delivery,
             @PathParam("botId") String botId,
-            String payload) throws Exception {
+            String payload) {
 
-        boolean valid = validator.isValid(botId, signature, payload);
-        if (!valid) {
-            Logger.warning("Invalid Signature. Bot: %s", botId);
+        try {
+            boolean valid = validator.isValid(botId, signature, payload);
+            if (!valid) {
+                Logger.warning("Invalid Signature. Bot: %s", botId);
+                return Response.
+                        status(403).
+                        build();
+            }
+
+            WireClient client = repo.getWireClient(botId);
+            if (client == null) {
+                Logger.warning("Bot previously deleted. Bot: %s", botId);
+                return Response.
+                        status(404).
+                        build();
+            }
+
+            ObjectMapper mapper = new ObjectMapper();
+            GitResponse response = mapper.readValue(payload, GitResponse.class);
+
+            Logger.info("%s.%s\tBot: %s", event, response.action, botId);
+
+            String message = webHookHandler.handle(event, response);
+            if (message != null && !message.isEmpty())
+                client.sendText(message);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Logger.error("webHook: %s", e);
             return Response.
-                    status(403).
+                    serverError().
                     build();
         }
-
-        WireClient client = repo.getWireClient(botId);
-        if (client == null) {
-            Logger.warning("Bot previously deleted. Bot: %s", botId);
-            return Response.
-                    status(404).
-                    build();
-        }
-
-        ObjectMapper mapper = new ObjectMapper();
-        GitResponse response = mapper.readValue(payload, GitResponse.class);
-
-        Logger.info("%s.%s\tBot: %s", event, response.action, botId);
-
-        String message = webHookHandler.handle(event, response);
-        if (message != null && !message.isEmpty())
-            client.sendText(message);
 
         return Response.
                 ok().

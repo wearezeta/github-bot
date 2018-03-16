@@ -3,5 +3,5 @@
  - Commit 1
  - Commit 2
 
-https://github.com/wearezeta/github-bot/compare/e6bca012ad34...eca0bcbe1cfc
+[compare](https://github.com/wearezeta/github-bot/compare/e6bca012ad34...eca0bcbe1cfc)
 —
