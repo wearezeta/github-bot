@@ -6,7 +6,7 @@
 
     <artifactId>github-bot</artifactId>
     <groupId>com.wire.bots</groupId>
-    <version>0.5.1</version>
+    <version>0.6.0</version>
 
     <repositories>
         <repository>
