@@ -25,6 +25,7 @@ import com.wire.bots.sdk.Server;
 import com.wire.bots.sdk.crypto.CryptoDatabase;
 import com.wire.bots.sdk.factories.CryptoFactory;
 import com.wire.bots.sdk.factories.StorageFactory;
+import com.wire.bots.sdk.state.PostgresState;
 import io.dropwizard.setup.Environment;
 
 public class Service extends Server<Config> {
@@ -58,7 +59,7 @@ public class Service extends Server<Config> {
      */
     @Override
     protected StorageFactory getStorageFactory(Config config) {
-        return botId -> new com.wire.bots.sdk.storage.PgStorage(botId, config.db);
+        return botId -> new PostgresState(botId, config.db);
     }
 
     /**
