@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-mvn package
+mvn package  -DskipTests=true
 docker build -t dejankovacevic/github-bot:0.6.0 .
 docker push dejankovacevic/github-bot
 kubectl delete pod -l name=github

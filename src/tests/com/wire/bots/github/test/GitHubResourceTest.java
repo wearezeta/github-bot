@@ -14,6 +14,7 @@ import org.junit.Test;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.UUID;
 
 import static junit.framework.TestCase.assertEquals;
 
@@ -21,24 +22,24 @@ public class GitHubResourceTest {
     @ClassRule
     public static final DropwizardAppRule<Config> app
             = new DropwizardAppRule<>(Service.class, "github.yaml");
-
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
             .addResource(new GitHubResource(new DummyRepo(), new DummyValidator()))
             .build();
+    String botId = UUID.randomUUID().toString();
 
     @Test
     public void testOnCommitCommentCreated() {
         String event = "commit_comment";
         String payload = FixtureHelpers.fixture("fixtures/events/" + event + ".created.json");
-        gitHubWebhookPost("bot", event, payload);
+        gitHubWebhookPost(botId, event, payload);
     }
 
     @Test
     public void testOnPRCreated() {
         String event = "pull_request";
         String payload = FixtureHelpers.fixture("fixtures/events/" + event + ".created.json");
-        gitHubWebhookPost("bot", event, payload);
+        gitHubWebhookPost(botId, event, payload);
     }
 
     private void gitHubWebhookPost(String botId, String event, String payload) {

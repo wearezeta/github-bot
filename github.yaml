@@ -8,3 +8,10 @@ server:
 
 auth: "your_token"
 data: ./data
+
+db:
+  host: localhost
+  port: 5432
+  database: postgres
+  user: postgres
+  password: password

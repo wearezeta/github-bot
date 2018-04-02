@@ -36,7 +36,6 @@ import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
 public class MessageHandler extends MessageHandlerBase {
-    private static final String SECRET_FILE = "secret";
     private final SessionIdentifierGenerator sesGen = new SessionIdentifierGenerator();
     private final StorageFactory storageFactory;
 
@@ -65,7 +64,7 @@ public class MessageHandler extends MessageHandlerBase {
     public void onNewConversation(WireClient client) {
         try {
             String secret = sesGen.next(6);
-            storageFactory.create(client.getId()).saveFile(SECRET_FILE, secret);
+            new Database(client.getId(), Service.config.db).insertSecret(secret);
 
             String help = formatHelp(client);
             client.sendText(help, TimeUnit.MINUTES.toMillis(15));
@@ -92,7 +91,7 @@ public class MessageHandler extends MessageHandlerBase {
     private String formatHelp(WireClient client) throws Exception {
         String botId = client.getId();
         String host = getHost();
-        String secret = storageFactory.create(botId).readFile(SECRET_FILE);
+        String secret = new Database(botId, Service.config.db).getSecret();
         String name = client.getConversation().name;
         String convName = name != null ? URLEncoder.encode(name, "UTF-8") : "";
         String owner = getOwner(client);

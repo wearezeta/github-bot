@@ -58,7 +58,7 @@ public class DummyRepo extends ClientRepo {
             }
 
             @Override
-            public void sendPicture(byte[] bytes, String mimeType, String userId) throws Exception {
+            public void sendDirectPicture(byte[] bytes, String mimeType, String userId) throws Exception {
 
             }
 
