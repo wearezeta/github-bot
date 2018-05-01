@@ -64,7 +64,7 @@ public class MessageHandler extends MessageHandlerBase {
     public void onNewConversation(WireClient client) {
         try {
             String secret = sesGen.next(6);
-            new Database(client.getId(), Service.config.db).insertSecret(secret);
+            getDatabase(client.getId()).insertSecret(secret);
 
             String help = formatHelp(client);
             client.sendText(help, TimeUnit.MINUTES.toMillis(15));
@@ -91,13 +91,17 @@ public class MessageHandler extends MessageHandlerBase {
     private String formatHelp(WireClient client) throws Exception {
         String botId = client.getId();
         String host = getHost();
-        String secret = new Database(botId, Service.config.db).getSecret();
+        String secret = getDatabase(botId).getSecret();
         String name = client.getConversation().name;
         String convName = name != null ? URLEncoder.encode(name, "UTF-8") : "";
         String owner = getOwner(client);
 
         String url = String.format("https://%s/%s#conv=%s,owner=@%s", host, botId, convName, owner);
         return formatHelp(url, secret);
+    }
+
+    private Database getDatabase(String botId) {
+        return new Database(botId, Service.config.getPostgres());
     }
 
     private String formatHelp(String url, String secret) {
@@ -112,7 +116,7 @@ public class MessageHandler extends MessageHandlerBase {
     }
 
     private String getHost() {
-        return "github.services." + Util.getDomain();
+        return String.format("services.%s/github", Util.getDomain());
     }
 
     @Nullable
