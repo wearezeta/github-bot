@@ -29,11 +29,9 @@ import com.wire.bots.sdk.server.model.User;
 import com.wire.bots.sdk.tools.Logger;
 import com.wire.bots.sdk.tools.Util;
 
-import javax.annotation.Nullable;
 import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.concurrent.TimeUnit;
 
 public class MessageHandler extends MessageHandlerBase {
     private final SessionIdentifierGenerator sesGen = new SessionIdentifierGenerator();
@@ -66,8 +64,11 @@ public class MessageHandler extends MessageHandlerBase {
             String secret = sesGen.next(6);
             getDatabase(client.getId()).insertSecret(secret);
 
+            String origin = getOwner(client).id;
+
             String help = formatHelp(client);
-            client.sendText(help, TimeUnit.MINUTES.toMillis(15));
+            client.sendDirectText(help, origin);
+
         } catch (Exception e) {
             e.printStackTrace();
             Logger.error(e.getMessage());
@@ -80,7 +81,7 @@ public class MessageHandler extends MessageHandlerBase {
             if (msg.getText().equalsIgnoreCase("/help")) {
                 String help = formatHelp(client);
 
-                client.sendText(help, TimeUnit.SECONDS.toMillis(60));
+                client.sendDirectText(help, msg.getUserId());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -94,9 +95,10 @@ public class MessageHandler extends MessageHandlerBase {
         String secret = getDatabase(botId).getSecret();
         String name = client.getConversation().name;
         String convName = name != null ? URLEncoder.encode(name, "UTF-8") : "";
-        String owner = getOwner(client);
+        User owner = getOwner(client);
+        String handle = owner.handle;
 
-        String url = String.format("https://%s/%s#conv=%s,owner=@%s", host, botId, convName, owner);
+        String url = String.format("https://%s/%s#conv=%s,owner=@%s", host, botId, convName, handle);
         return formatHelp(url, secret);
     }
 
@@ -119,13 +121,10 @@ public class MessageHandler extends MessageHandlerBase {
         return String.format("services.%s/github", Util.getDomain());
     }
 
-    @Nullable
-    private String getOwner(WireClient client) throws Exception {
+    private User getOwner(WireClient client) throws Exception {
         String botId = client.getId();
         NewBot state = storageFactory.create(botId).getState();
         Collection<User> users = client.getUsers(Collections.singletonList(state.origin.id));
-        for (User user : users)
-            return user.handle;
-        return null;
+        return users.stream().findFirst().get();
     }
 }
