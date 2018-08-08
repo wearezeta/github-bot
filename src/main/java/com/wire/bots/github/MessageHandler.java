@@ -23,7 +23,6 @@ import com.wire.bots.sdk.MessageHandlerBase;
 import com.wire.bots.sdk.WireClient;
 import com.wire.bots.sdk.factories.StorageFactory;
 import com.wire.bots.sdk.models.TextMessage;
-import com.wire.bots.sdk.server.model.Member;
 import com.wire.bots.sdk.server.model.NewBot;
 import com.wire.bots.sdk.server.model.User;
 import com.wire.bots.sdk.tools.Logger;
@@ -46,15 +45,6 @@ public class MessageHandler extends MessageHandlerBase {
         Logger.info(String.format("onNewBot: bot: %s, user: %s",
                 newBot.id,
                 newBot.origin.id));
-
-        for (Member member : newBot.conversation.members) {
-            if (member.service != null) {
-                Logger.warning("Rejecting NewBot. user: %s service: %s",
-                        newBot.origin.id,
-                        member.service.id);
-                return false; // we don't want to be in a conv if other bots are there.
-            }
-        }
         return true;
     }
 
