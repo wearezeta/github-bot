@@ -18,24 +18,18 @@
 
 package com.wire.bots.github;
 
-import com.wire.bots.cryptonite.CryptoService;
-import com.wire.bots.cryptonite.StorageService;
-import com.wire.bots.cryptonite.client.CryptoClient;
-import com.wire.bots.cryptonite.client.StorageClient;
 import com.wire.bots.github.resource.GitHubResource;
 import com.wire.bots.sdk.MessageHandlerBase;
 import com.wire.bots.sdk.Server;
+import com.wire.bots.sdk.crypto.CryptoDatabase;
+import com.wire.bots.sdk.crypto.storage.RedisStorage;
 import com.wire.bots.sdk.factories.CryptoFactory;
 import com.wire.bots.sdk.factories.StorageFactory;
+import com.wire.bots.sdk.state.RedisState;
 import io.dropwizard.setup.Environment;
 
-import java.net.URI;
-
 public class Service extends Server<Config> {
-
-    private static final String SERVICE = "github";
-    private StorageClient storageClient;
-    private CryptoClient cryptoClient;
+    static Config config;
 
     public static void main(String[] args) throws Exception {
         new Service().run(args);
@@ -43,8 +37,8 @@ public class Service extends Server<Config> {
 
     @Override
     protected void initialize(Config config, Environment env) throws Exception {
-        storageClient = new StorageClient(SERVICE, new URI(config.data));
-        cryptoClient = new CryptoClient(SERVICE, new URI(config.data));
+        Service.config = config;
+        env.jersey().setUrlPattern("/github/*");
     }
 
     @Override
@@ -54,18 +48,33 @@ public class Service extends Server<Config> {
 
     @Override
     protected void onRun(Config config, Environment env) {
-        StorageFactory storageFactory = getStorageFactory(config);
-        Validator validator = new Validator(storageFactory);
-        addResource(new GitHubResource(repo, validator), env);
+        addResource(new GitHubResource(repo, new Validator()), env);
     }
 
+    /**
+     * Instructs the framework to use Storage Service for the state.
+     * Remove this override in order to use local File system storage
+     *
+     * @param config Config
+     * @return Storage
+     */
     @Override
     protected StorageFactory getStorageFactory(Config config) {
-        return botId -> new StorageService(botId, storageClient);
+        return botId -> new RedisState(botId, config.db);
     }
 
+    /**
+     * Instructs the framework to use Crypto Service for the crypto keys.
+     * Remove this override in order to store cryptobox onto your local File system
+     *
+     * @param config Config
+     * @return CryptoFactory
+     */
     @Override
     protected CryptoFactory getCryptoFactory(Config config) {
-        return (botId) -> new CryptoService(botId, cryptoClient);
+        return (botId) -> {
+            RedisStorage storage = new RedisStorage(config.db.host, config.db.port, config.db.password);
+            return new CryptoDatabase(botId, storage);
+        };
     }
 }

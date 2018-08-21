@@ -22,5 +22,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Config extends com.wire.bots.sdk.Configuration {
+    public DB postgres = new DB();
 
+    public DB getPostgres() {
+        return postgres;
+    }
 }

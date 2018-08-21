@@ -1,0 +1,4 @@
+CREATE TABLE GitHub (
+ botId  UUID NOT NULL PRIMARY KEY,
+ secret varchar NOT NULL
+);

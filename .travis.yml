@@ -1,9 +1,6 @@
 sudo: required
 language: java
-# Cache our Gcloud SDK between commands
-cache:
-  directories:
-  - "$HOME/google-cloud-sdk/"
+
 services:
 - docker
 after_success:
@@ -12,14 +9,3 @@ after_success:
       docker build -t dejankovacevic/github-bot:latest . ;
       docker push dejankovacevic/github-bot ;
     fi
-
-before_install:
-- openssl aes-256-cbc -K $encrypted_941c9d24308c_key -iv $encrypted_941c9d24308c_iv
-  -in client-secret.json.enc -out client-secret.json -d
-
-- mkdir -p lib
-
-- gcloud auth activate-service-account --key-file client-secret.json
-
-script:
-#- kubectl delete pod -l name=github -n staging
