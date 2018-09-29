@@ -45,20 +45,23 @@ public class MessageHandler extends MessageHandlerBase {
         Logger.info(String.format("onNewBot: bot: %s, user: %s",
                 newBot.id,
                 newBot.origin.id));
+        try {
+            String secret = sesGen.next(6);
+            getDatabase(newBot.id).insertSecret(secret);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return true;
     }
 
     @Override
     public void onNewConversation(WireClient client) {
         try {
-            String secret = sesGen.next(6);
-            getDatabase(client.getId()).insertSecret(secret);
+            String help = formatHelp(client);
 
             String origin = getOwner(client).id;
-
-            String help = formatHelp(client);
             client.sendDirectText(help, origin);
-
         } catch (Exception e) {
             e.printStackTrace();
             Logger.error(e.getMessage());
