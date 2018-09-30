@@ -16,7 +16,7 @@ public class Database {
 
     public boolean insertSecret(String secret) throws Exception {
         try (Connection c = newConnection()) {
-            PreparedStatement stmt = c.prepareStatement("INSERT INTO GitHub (botId, secret) VALUES (?, ?) ON CONFLICT (botId) DO NOTHING");
+            PreparedStatement stmt = c.prepareStatement("INSERT INTO GitHub (botId, secret) VALUES (?, ?)");
             stmt.setObject(1, botId);
             stmt.setString(2, secret);
             return stmt.executeUpdate() == 1;
@@ -36,7 +36,7 @@ public class Database {
     }
 
     private Connection newConnection() throws SQLException {
-        String url = String.format("jdbc:postgresql://%s:%d/%s", conf.host, conf.port, conf.database);
+        String url = String.format("jdbc:%s://%s:%d/%s", conf.driver, conf.host, conf.port, conf.database);
         return DriverManager.getConnection(url, conf.user, conf.password);
     }
 }

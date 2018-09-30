@@ -37,7 +37,7 @@ public class GitHubResource {
         try {
             boolean valid = validator.isValid(botId, signature, payload);
             if (!valid) {
-                Logger.warning("Invalid Signature. Bot: %s", botId);
+                Logger.error("Invalid Signature. Bot: %s", botId);
                 return Response.
                         status(403).
                         build();
@@ -61,7 +61,6 @@ public class GitHubResource {
                 client.sendText(message);
 
         } catch (Exception e) {
-            e.printStackTrace();
             Logger.error("webHook: %s", e);
             return Response.
                     serverError().

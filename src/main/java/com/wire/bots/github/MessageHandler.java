@@ -49,9 +49,8 @@ public class MessageHandler extends MessageHandlerBase {
             String secret = sesGen.next(6);
             getDatabase(newBot.id).insertSecret(secret);
         } catch (Exception e) {
-            e.printStackTrace();
+            Logger.error(e.getMessage());
         }
-
         return true;
     }
 
@@ -63,7 +62,6 @@ public class MessageHandler extends MessageHandlerBase {
             String origin = getOwner(client).id;
             client.sendDirectText(help, origin);
         } catch (Exception e) {
-            e.printStackTrace();
             Logger.error(e.getMessage());
         }
     }
@@ -77,7 +75,6 @@ public class MessageHandler extends MessageHandlerBase {
                 client.sendDirectText(help, msg.getUserId());
             }
         } catch (Exception e) {
-            e.printStackTrace();
             Logger.error(e.getLocalizedMessage());
         }
     }
