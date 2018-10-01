@@ -3,5 +3,5 @@
 **Comment on line 19 by dkovacevic**
 Very nice!
 
-https://github.com/zinfra/ibis/commit/23a509e504834c8912b488add80034322a2b2422#commitcomment-26867427
+[comment](https://github.com/zinfra/ibis/commit/23a509e504834c8912b488add80034322a2b2422#commitcomment-26867427)
 —

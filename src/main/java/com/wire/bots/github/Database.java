@@ -1,17 +1,13 @@
 package com.wire.bots.github;
 
-import com.wire.bots.sdk.Configuration;
-
 import java.sql.*;
 import java.util.UUID;
 
 public class Database {
     private final UUID botId;
-    private final Configuration.DB conf;
 
-    public Database(String botId, Configuration.DB conf) {
+    public Database(String botId) {
         this.botId = UUID.fromString(botId);
-        this.conf = conf;
     }
 
     public boolean insertSecret(String secret) throws Exception {
@@ -35,7 +31,16 @@ public class Database {
         return null;
     }
 
+    boolean unsubscribe() throws SQLException {
+        try (Connection c = newConnection()) {
+            PreparedStatement stmt = c.prepareStatement("DELETE FROM GitHub WHERE botId = ?");
+            stmt.setObject(1, botId);
+            return stmt.executeUpdate() == 1;
+        }
+    }
+
     private Connection newConnection() throws SQLException {
+        Config.DB conf = Service.config.postgres;
         String url = String.format("jdbc:%s://%s:%d/%s", conf.driver, conf.host, conf.port, conf.database);
         return DriverManager.getConnection(url, conf.user, conf.password);
     }

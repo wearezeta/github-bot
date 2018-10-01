@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class Validator {
     public boolean isValid(String botId, String signature, String payload) throws Exception {
-        String secret = new Database(botId, Service.config.getPostgres()).getSecret();
+        String secret = new Database(botId).getSecret();
         if (secret == null)
             throw new IOException("Missing secret file for bot: " + botId);
 

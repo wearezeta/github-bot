@@ -2,24 +2,24 @@ package com.wire.bots.github.test;
 
 import com.wire.bots.github.Database;
 import com.wire.bots.sdk.Configuration;
-import org.junit.Test;
 
 import java.util.UUID;
 
 public class DatabaseTest {
 
-    @Test
+    //@Test
     public void test() throws Exception {
         Configuration.DB conf = new Configuration.DB();
         conf.host = "localhost";
         conf.port = 5432;
         conf.database = "postgres";
+        conf.driver = "postgresql";
         conf.user = "dejankovacevic";
         conf.password = "password";
 
         String botId = UUID.randomUUID().toString();
 
-        Database db = new Database(botId, conf);
+        Database db = new Database(botId);
         String secret = "secret";
 
         boolean b = db.insertSecret(secret);

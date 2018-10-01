@@ -29,6 +29,7 @@ import com.wire.bots.sdk.tools.Logger;
 import com.wire.bots.sdk.tools.Util;
 
 import java.net.URLEncoder;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -58,7 +59,6 @@ public class MessageHandler extends MessageHandlerBase {
     public void onNewConversation(WireClient client) {
         try {
             String help = formatHelp(client);
-
             String origin = getOwner(client).id;
             client.sendDirectText(help, origin);
         } catch (Exception e) {
@@ -79,6 +79,15 @@ public class MessageHandler extends MessageHandlerBase {
         }
     }
 
+    @Override
+    public void onBotRemoved(String botId) {
+        try {
+            getDatabase(botId).unsubscribe();
+        } catch (SQLException e) {
+            Logger.error("onBotRemoved: %s %s", botId, e);
+        }
+    }
+
     private String formatHelp(WireClient client) throws Exception {
         String botId = client.getId();
         String host = getHost();
@@ -93,7 +102,7 @@ public class MessageHandler extends MessageHandlerBase {
     }
 
     private Database getDatabase(String botId) {
-        return new Database(botId, Service.config.getPostgres());
+        return new Database(botId);
     }
 
     private String formatHelp(String url, String secret) {

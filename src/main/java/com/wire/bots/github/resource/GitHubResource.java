@@ -6,6 +6,7 @@ import com.wire.bots.github.WebHookHandler;
 import com.wire.bots.github.model.GitResponse;
 import com.wire.bots.sdk.ClientRepo;
 import com.wire.bots.sdk.WireClient;
+import com.wire.bots.sdk.exceptions.MissingStateException;
 import com.wire.bots.sdk.tools.Logger;
 
 import javax.ws.rs.*;
@@ -43,13 +44,7 @@ public class GitHubResource {
                         build();
             }
 
-            WireClient client = repo.getWireClient(botId);
-            if (client == null) {
-                Logger.warning("Bot previously deleted. Bot: %s", botId);
-                return Response.
-                        status(404).
-                        build();
-            }
+            WireClient client = repo.getClient(botId);
 
             ObjectMapper mapper = new ObjectMapper();
             GitResponse response = mapper.readValue(payload, GitResponse.class);
@@ -60,6 +55,12 @@ public class GitHubResource {
             if (message != null && !message.isEmpty())
                 client.sendText(message);
 
+        } catch (MissingStateException e) {
+            Logger.warning("Bot previously deleted. Bot: %s", botId);
+            webHookHandler.unsubscribe(botId);
+            return Response.
+                    status(404).
+                    build();
         } catch (Exception e) {
             Logger.error("webHook: %s", e);
             return Response.
