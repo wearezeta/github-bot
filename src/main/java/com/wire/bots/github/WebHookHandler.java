@@ -5,10 +5,12 @@ import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import com.github.mustachejava.MustacheNotFoundException;
 import com.wire.bots.github.model.GitResponse;
+import com.wire.bots.sdk.tools.Logger;
 
 import javax.annotation.Nullable;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.sql.SQLException;
 
 public class WebHookHandler {
     private final static MustacheFactory mf = new DefaultMustacheFactory();
@@ -42,6 +44,16 @@ public class WebHookHandler {
             return sw.toString();
         } catch (Exception e) {
             return null;
+        }
+    }
+
+    public void unsubscribe(String botId) {
+        try {
+            boolean unsubscribe = new Database(botId).unsubscribe();
+            if (unsubscribe)
+                Logger.info("Unsubscribed bot: %s", botId);
+        } catch (SQLException e) {
+            Logger.error("WebHookHandler: %s %s", botId, e);
         }
     }
 }

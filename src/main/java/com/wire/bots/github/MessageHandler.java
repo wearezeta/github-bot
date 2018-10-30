@@ -29,6 +29,7 @@ import com.wire.bots.sdk.tools.Logger;
 import com.wire.bots.sdk.tools.Util;
 
 import java.net.URLEncoder;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -45,22 +46,22 @@ public class MessageHandler extends MessageHandlerBase {
         Logger.info(String.format("onNewBot: bot: %s, user: %s",
                 newBot.id,
                 newBot.origin.id));
+        try {
+            String secret = sesGen.next(6);
+            getDatabase(newBot.id).insertSecret(secret);
+        } catch (Exception e) {
+            Logger.error(e.getMessage());
+        }
         return true;
     }
 
     @Override
     public void onNewConversation(WireClient client) {
         try {
-            String secret = sesGen.next(6);
-            getDatabase(client.getId()).insertSecret(secret);
-
-            String origin = getOwner(client).id;
-
             String help = formatHelp(client);
+            String origin = getOwner(client).id;
             client.sendDirectText(help, origin);
-
         } catch (Exception e) {
-            e.printStackTrace();
             Logger.error(e.getMessage());
         }
     }
@@ -74,8 +75,16 @@ public class MessageHandler extends MessageHandlerBase {
                 client.sendDirectText(help, msg.getUserId());
             }
         } catch (Exception e) {
-            e.printStackTrace();
             Logger.error(e.getLocalizedMessage());
+        }
+    }
+
+    @Override
+    public void onBotRemoved(String botId) {
+        try {
+            getDatabase(botId).unsubscribe();
+        } catch (SQLException e) {
+            Logger.error("onBotRemoved: %s %s", botId, e);
         }
     }
 
@@ -93,7 +102,7 @@ public class MessageHandler extends MessageHandlerBase {
     }
 
     private Database getDatabase(String botId) {
-        return new Database(botId, Service.config.getPostgres());
+        return new Database(botId);
     }
 
     private String formatHelp(String url, String secret) {

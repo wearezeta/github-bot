@@ -20,7 +20,7 @@ public class DummyRepo extends ClientRepo {
     }
 
     @Override
-    public WireClient getWireClient(String botId) {
+    public WireClient getClient(String botId) {
         return new WireClient() {
             @Override
             public void close() throws IOException {
@@ -49,6 +49,11 @@ public class DummyRepo extends ClientRepo {
 
             @Override
             public void sendLinkPreview(String url, String title, IGeneric image) throws Exception {
+
+            }
+
+            @Override
+            public void sendDirectLinkPreview(String url, String title, IGeneric image, String userId) throws Exception {
 
             }
 

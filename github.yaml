@@ -14,7 +14,7 @@ postgres:
   database: postgres
   driver: postgresql
   user: postgres
-  password: password
+  password: ${DW_POSTGRES_PASSWORD}
 
 db:
     host: localhost
