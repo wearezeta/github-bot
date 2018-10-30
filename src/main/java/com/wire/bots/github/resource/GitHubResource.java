@@ -36,6 +36,8 @@ public class GitHubResource {
             String payload) {
 
         try {
+            WireClient client = repo.getClient(botId);
+
             boolean valid = validator.isValid(botId, signature, payload);
             if (!valid) {
                 Logger.error("Invalid Signature. Bot: %s", botId);
@@ -43,8 +45,6 @@ public class GitHubResource {
                         status(403).
                         build();
             }
-
-            WireClient client = repo.getClient(botId);
 
             ObjectMapper mapper = new ObjectMapper();
             GitResponse response = mapper.readValue(payload, GitResponse.class);
@@ -56,7 +56,7 @@ public class GitHubResource {
                 client.sendText(message);
 
         } catch (MissingStateException e) {
-            Logger.warning("Bot previously deleted. Bot: %s", botId);
+            Logger.info("Bot previously deleted. Bot: %s", botId);
             webHookHandler.unsubscribe(botId);
             return Response.
                     status(404).
