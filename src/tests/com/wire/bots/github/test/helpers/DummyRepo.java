@@ -73,6 +73,11 @@ public class DummyRepo extends ClientRepo {
             }
 
             @Override
+            public void sendDirectPicture(IGeneric image, String userId) throws Exception {
+
+            }
+
+            @Override
             public void sendAudio(byte[] bytes, String name, String mimeType, long duration) throws Exception {
 
             }
@@ -84,6 +89,16 @@ public class DummyRepo extends ClientRepo {
 
             @Override
             public void sendFile(File file, String mime) throws Exception {
+
+            }
+
+            @Override
+            public void sendDirectFile(File file, String mime, String userId) throws Exception {
+
+            }
+
+            @Override
+            public void sendDirectFile(IGeneric preview, IGeneric asset, String userId) throws Exception {
 
             }
 

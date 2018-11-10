@@ -4,6 +4,13 @@ language: java
 services:
 - docker
 
+notifications:
+  webhooks:
+      urls:
+        - 'https://services.wire.com/github/travis/163bf4f9-8b06-43fc-ab46-472ae2d602be#conv=,owner=@dejan_wire'
+      on_success: always # default: always
+      on_failure: always # default: always
+
 after_success:
   - if [[ "$TRAVIS_BRANCH" == "master" ]]; then
       docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD ;
@@ -11,6 +18,3 @@ after_success:
       docker push $DOCKER_USERNAME/github-bot ;
     fi
 
-notifications:
-  webhooks:
-    - https://services.wire.com/github/travis/163bf4f9-8b06-43fc-ab46-472ae2d602be#conv=,owner=@dejan_wire

@@ -6,7 +6,7 @@ server:
   requestLog:
     appenders: []
 
-auth: "your_token"
+auth: ${DW_GITHUB_WIRE_SERVICE_TOKEN}
 
 postgres:
   host: localhost
