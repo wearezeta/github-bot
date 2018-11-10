@@ -6,10 +6,7 @@ services:
 
 notifications:
   webhooks:
-      urls:
-        - 'http://services.wire.com/github/travis/163bf4f9-8b06-43fc-ab46-472ae2d602be#conv=,owner=@dejan_wire'
-      on_success: always # default: always
-      on_failure: always # default: always
+      - http://services.wire.com/github/travis/163bf4f9-8b06-43fc-ab46-472ae2d602be
 
 after_success:
   - if [[ "$TRAVIS_BRANCH" == "master" ]]; then
