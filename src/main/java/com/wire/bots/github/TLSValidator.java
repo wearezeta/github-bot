@@ -9,11 +9,12 @@ import java.util.Base64;
 public class TLSValidator {
     private final PublicKey publicKey;
 
-    public TLSValidator(URL url) throws InvalidKeySpecException, NoSuchAlgorithmException {
+    TLSValidator(URL url) throws InvalidKeySpecException, NoSuchAlgorithmException {
         publicKey = fetchPubKey(url);
     }
 
     private PublicKey fetchPubKey(URL url) throws InvalidKeySpecException, NoSuchAlgorithmException {
+        //todo pull this pubkey from https://api.travis-ci.org/config
         String publicKeyPEM = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvtjdLkS+FP+0fPC09j25" +
                 "y/PiuYDDivIT86COVedvlElk99BBYTrqNaJybxjXbIZ1Q6xFNhOY+iTcBr4E1zJu" +
                 "tizF3Xi0V9tOuP/M8Wn4Y/1lCWbQKlWrNQuqNBmhovF4K3mDCYswVbpgTmp+JQYu" +

@@ -39,7 +39,7 @@ public class TravisResource {
 
             boolean valid = validator.isValid(Base64.getDecoder().decode(signature), payload.getBytes());
             if (!valid) {
-                Logger.error("Invalid Signature. Bot: %s", botId);
+                Logger.warning("Invalid Signature. Bot: %s", botId);
                 return Response.
                         status(403).
                         build();
@@ -48,7 +48,7 @@ public class TravisResource {
             ObjectMapper mapper = new ObjectMapper();
             Travis response = mapper.readValue(payload, Travis.class);
 
-            Logger '.info("Bot: %s, id %s state: %s", botId, response.id, response.state);
+            Logger.info("Bot: %s, id %s state: %s", botId, response.id, response.state);
 
             String text = String.format("Travis build: __%s__ **%s**\n[build](%s)\n%s\n%s [commit](%s)",
                     response.repository.name,

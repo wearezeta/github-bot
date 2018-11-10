@@ -40,7 +40,7 @@ public class GitHubResource {
 
             boolean valid = validator.isValid(botId, signature, payload);
             if (!valid) {
-                Logger.error("Invalid Signature. Bot: %s", botId);
+                Logger.warning("Invalid Signature. Bot: %s", botId);
                 return Response.
                         status(403).
                         build();
@@ -49,7 +49,7 @@ public class GitHubResource {
             ObjectMapper mapper = new ObjectMapper();
             GitResponse response = mapper.readValue(payload, GitResponse.class);
 
-            Logger.info("%s.%s\tBot: %s", event, response.action, botId);
+            Logger.info("%s.%s Bot: %s", event, response.action, botId);
 
             String message = webHookHandler.handle(event, response);
             if (message != null && !message.isEmpty())
