@@ -19,6 +19,7 @@
 package com.wire.bots.github;
 
 import com.wire.bots.github.resource.GitHubResource;
+import com.wire.bots.github.resource.TravisResource;
 import com.wire.bots.sdk.MessageHandlerBase;
 import com.wire.bots.sdk.Server;
 import com.wire.bots.sdk.crypto.CryptoDatabase;
@@ -26,7 +27,10 @@ import com.wire.bots.sdk.crypto.storage.RedisStorage;
 import com.wire.bots.sdk.factories.CryptoFactory;
 import com.wire.bots.sdk.factories.StorageFactory;
 import com.wire.bots.sdk.state.RedisState;
+import com.wire.bots.sdk.tools.Logger;
 import io.dropwizard.setup.Environment;
+
+import java.net.URL;
 
 public class Service extends Server<Config> {
     static Config config;
@@ -36,7 +40,7 @@ public class Service extends Server<Config> {
     }
 
     @Override
-    protected void initialize(Config config, Environment env) throws Exception {
+    protected void initialize(Config config, Environment env) {
         Service.config = config;
         env.jersey().setUrlPattern("/github/*");
     }
@@ -49,6 +53,12 @@ public class Service extends Server<Config> {
     @Override
     protected void onRun(Config config, Environment env) {
         addResource(new GitHubResource(repo, new Validator()), env);
+        try {
+            addResource(new TravisResource(repo, new TLSValidator(new URL("https://api.travis-ci.org/config"))), env);
+        } catch (Exception e) {
+            Logger.error("OnRun: %s", e);
+            e.printStackTrace();
+        }
     }
 
     /**

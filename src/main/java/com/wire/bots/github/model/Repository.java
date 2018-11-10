@@ -7,4 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Repository {
     @JsonProperty("full_name")
     public String full_name;
+
+    @JsonProperty
+    public String name;
 }
