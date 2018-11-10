@@ -1,17 +1,14 @@
 sudo: required
 language: java
-
 services:
 - docker
-
 notifications:
   webhooks:
-      - https://services.wire.com/github/travis/163bf4f9-8b06-43fc-ab46-472ae2d602be
-
+    matrix:
+    - https://services.wire.com/github/travis/163bf4f9-8b06-43fc-ab46-472ae2d602be
+    urls:
+      secure: NY/S8ovUQZA8sWYEPOJntVpMxuP2qixlUM+v1EIboqg9/pMwZAQg/FYd/ZBhI3ukjRltyf6Xs1RRkZheAu7MXpZ9sEbFrYvQbzm+FAc2oPN52AngqS1fMQIz4788EeOcjHbE2st9ARSXWnqBZTxsd8p4bosh5EDbkA96KqiAG4HAJHYtxBisKE/t9i8wEtrhoAEEbp26HVOF9ezucY6FoRb2AeEXZDdmy5HQcAovwFDbDChLH73RUmmfkBne/Dz7D+/gpBxY30noeLuQ+JdGi5LCIe1EVNmAbxozZDz4PLysSDO9db/nwAxwQ8iOAlBhTD8vxqk9IW/VfeEFdnVMigOl0nVnJ+6dVnvQ7+1q0ZvUrwYnzDv3MhAm/OZ2otz5R8UPo2eCYI9kHsmvnvkG3aS31EqWFMbqhnRFQwHgRMemTQ8RRRWcC74rdymPDJLvGiHfiUdqstEGcQ/exvODnWed5vBP8uA6lAcUEY+vk1mymP5i1UDVq6zrMRzV3Ofgvv0oKyWLmb1SuBtd5appgshT8vNDfZ09VUKSjeDym2B7EutHGjN/dxjTYRGGXBhTCApg1N+1fzAuj4LHaK04h2dKicE0ExS4y/dXzW4L+dcIwUbNxtrJfXr8naylBPZexWy+WzqJNWIv3dq1UjjPS1f0iJswbylOei0vzzVH56s=
 after_success:
-  - if [[ "$TRAVIS_BRANCH" == "master" ]]; then
-      docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD ;
-      docker build -t $DOCKER_USERNAME/github-bot:latest . ;
-      docker push $DOCKER_USERNAME/github-bot ;
-    fi
-
+- if [[ "$TRAVIS_BRANCH" == "master" ]]; then docker login -u $DOCKER_USERNAME -p
+  $DOCKER_PASSWORD ; docker build -t $DOCKER_USERNAME/github-bot:latest . ; docker
+  push $DOCKER_USERNAME/github-bot ; fi
