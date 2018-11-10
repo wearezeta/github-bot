@@ -1,7 +1,7 @@
 package com.wire.bots.github.resource;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wire.bots.github.Validator;
+import com.wire.bots.github.HmacValidator;
 import com.wire.bots.github.WebHookHandler;
 import com.wire.bots.github.model.GitResponse;
 import com.wire.bots.sdk.ClientRepo;
@@ -18,10 +18,10 @@ import javax.ws.rs.core.Response;
 public class GitHubResource {
 
     private final ClientRepo repo;
-    private final Validator validator;
+    private final HmacValidator validator;
     private final WebHookHandler webHookHandler;
 
-    public GitHubResource(ClientRepo repo, Validator validator) {
+    public GitHubResource(ClientRepo repo, HmacValidator validator) {
         this.repo = repo;
         this.validator = validator;
         webHookHandler = new WebHookHandler();

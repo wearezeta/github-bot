@@ -4,7 +4,7 @@ import com.wire.bots.sdk.tools.Util;
 
 import java.io.IOException;
 
-public class Validator {
+public class HmacValidator {
     public boolean isValid(String botId, String signature, String payload) throws Exception {
         String secret = new Database(botId).getSecret();
         if (secret == null)

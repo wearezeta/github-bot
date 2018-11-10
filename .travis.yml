@@ -6,7 +6,7 @@ services:
 
 notifications:
   webhooks:
-      - http://services.wire.com/github/travis/163bf4f9-8b06-43fc-ab46-472ae2d602be
+      - https://services.wire.com/github/travis/163bf4f9-8b06-43fc-ab46-472ae2d602be
 
 after_success:
   - if [[ "$TRAVIS_BRANCH" == "master" ]]; then

@@ -1,7 +1,7 @@
 package com.wire.bots.github.resource;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wire.bots.github.TLSValidator;
+import com.wire.bots.github.SHA256RsaValidator;
 import com.wire.bots.github.WebHookHandler;
 import com.wire.bots.github.model.Travis;
 import com.wire.bots.sdk.ClientRepo;
@@ -19,10 +19,10 @@ import java.util.Base64;
 public class TravisResource {
 
     private final ClientRepo repo;
-    private final TLSValidator validator;
+    private final SHA256RsaValidator validator;
     private final WebHookHandler webHookHandler;
 
-    public TravisResource(ClientRepo repo, TLSValidator validator) {
+    public TravisResource(ClientRepo repo, SHA256RsaValidator validator) {
         this.repo = repo;
         this.validator = validator;
         webHookHandler = new WebHookHandler();

@@ -1,10 +1,10 @@
 package com.wire.bots.github.test.helpers;
 
-import com.wire.bots.github.Validator;
+import com.wire.bots.github.HmacValidator;
 
-public class DummyValidator extends Validator{
+public class DummyValidator extends HmacValidator {
     @Override
-    public boolean isValid(String botId, String signature, String payload) throws Exception {
+    public boolean isValid(String botId, String signature, String payload) {
         return true;
     }
 }
