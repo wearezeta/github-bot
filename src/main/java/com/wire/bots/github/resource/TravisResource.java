@@ -1,9 +1,9 @@
 package com.wire.bots.github.resource;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wire.bots.github.HmacValidator;
+import com.wire.bots.github.SHA256RsaValidator;
 import com.wire.bots.github.WebHookHandler;
-import com.wire.bots.github.model.GitResponse;
+import com.wire.bots.github.model.Travis;
 import com.wire.bots.sdk.ClientRepo;
 import com.wire.bots.sdk.WireClient;
 import com.wire.bots.sdk.exceptions.MissingStateException;
@@ -12,16 +12,17 @@ import com.wire.bots.sdk.tools.Logger;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Base64;
 
 @Consumes(MediaType.APPLICATION_JSON)
-@Path("/{botId}")
-public class GitHubResource {
+@Path("/travis/{botId}")
+public class TravisResource {
 
     private final ClientRepo repo;
-    private final HmacValidator validator;
+    private final SHA256RsaValidator validator;
     private final WebHookHandler webHookHandler;
 
-    public GitHubResource(ClientRepo repo, HmacValidator validator) {
+    public TravisResource(ClientRepo repo, SHA256RsaValidator validator) {
         this.repo = repo;
         this.validator = validator;
         webHookHandler = new WebHookHandler();
@@ -29,16 +30,14 @@ public class GitHubResource {
 
     @POST
     public Response webHook(
-            @HeaderParam("X-GitHub-Event") String event,
-            @HeaderParam("X-Hub-Signature") String signature,
-            @HeaderParam("X-GitHub-Delivery") String delivery,
+            @HeaderParam("Signature") String signature,
             @PathParam("botId") String botId,
             String payload) {
 
         try {
             WireClient client = repo.getClient(botId);
 
-            boolean valid = validator.isValid(botId, signature, payload);
+            boolean valid = validator.isValid(Base64.getDecoder().decode(signature), payload.getBytes());
             if (!valid) {
                 Logger.warning("Invalid Signature. Bot: %s", botId);
                 return Response.
@@ -47,13 +46,19 @@ public class GitHubResource {
             }
 
             ObjectMapper mapper = new ObjectMapper();
-            GitResponse response = mapper.readValue(payload, GitResponse.class);
+            Travis response = mapper.readValue(payload, Travis.class);
 
-            Logger.info("%s.%s Bot: %s", event, response.action, botId);
+            Logger.info("Bot: %s, id %s state: %s", botId, response.id, response.state);
 
-            String message = webHookHandler.handle(event, response);
-            if (message != null && !message.isEmpty())
-                client.sendText(message);
+            String text = String.format("Travis build: __%s__ **%s**\n[build](%s)\n%s\n%s [commit](%s)",
+                    response.repository.name,
+                    response.state,
+                    response.build_url,
+                    response.message,
+                    response.author_name,
+                    response.compare_url);
+
+            client.sendText(text);
 
         } catch (MissingStateException e) {
             Logger.info("Bot previously deleted. Bot: %s", botId);
@@ -62,7 +67,8 @@ public class GitHubResource {
                     status(404).
                     build();
         } catch (Exception e) {
-            Logger.error("webHook: %s", e);
+            e.printStackTrace();
+            Logger.error("TravisResource.webHook: %s", e);
             return Response.
                     serverError().
                     build();
