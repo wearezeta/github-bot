@@ -2,7 +2,6 @@ package com.wire.bots.github.resource;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wire.bots.github.SHA256RsaValidator;
-import com.wire.bots.github.WebHookHandler;
 import com.wire.bots.github.model.Travis;
 import com.wire.bots.sdk.ClientRepo;
 import com.wire.bots.sdk.WireClient;
@@ -20,12 +19,10 @@ public class TravisResource {
 
     private final ClientRepo repo;
     private final SHA256RsaValidator validator;
-    private final WebHookHandler webHookHandler;
 
     public TravisResource(ClientRepo repo, SHA256RsaValidator validator) {
         this.repo = repo;
         this.validator = validator;
-        webHookHandler = new WebHookHandler();
     }
 
     @POST
@@ -62,7 +59,6 @@ public class TravisResource {
 
         } catch (MissingStateException e) {
             Logger.info("Bot previously deleted. Bot: %s", botId);
-            webHookHandler.unsubscribe(botId);
             return Response.
                     status(404).
                     build();
