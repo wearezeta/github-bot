@@ -58,7 +58,7 @@ public class TravisResource {
             client.sendText(text);
 
         } catch (MissingStateException e) {
-            Logger.info("Bot previously deleted. Bot: %s", botId);
+            Logger.info("TravisResource.webHook: Bot previously deleted. Bot: %s", botId);
             return Response.
                     status(404).
                     build();

@@ -56,13 +56,13 @@ public class GitHubResource {
                 client.sendText(message);
 
         } catch (MissingStateException e) {
-            Logger.info("Bot previously deleted. Bot: %s", botId);
+            Logger.info("GitHubResource.webHook: Bot previously deleted. Bot: %s", botId);
             webHookHandler.unsubscribe(botId);
             return Response.
                     status(404).
                     build();
         } catch (Exception e) {
-            Logger.error("webHook: %s", e);
+            Logger.error("GitHubResource.webHook: %s", e);
             return Response.
                     serverError().
                     build();

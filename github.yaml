@@ -8,6 +8,13 @@ server:
 
 auth: ${DW_GITHUB_WIRE_SERVICE_TOKEN}
 
+swagger:
+  resourcePackage: com.wire.bots.sdk.server.resources
+  uriPrefix: /github
+  schemes:
+    - http
+    - https
+
 postgres:
   host: localhost
   port: 5432
