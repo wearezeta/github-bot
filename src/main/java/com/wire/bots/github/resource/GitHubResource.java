@@ -35,8 +35,7 @@ public class GitHubResource {
             @PathParam("botId") String botId,
             String payload) {
 
-        try {
-            WireClient client = repo.getClient(botId);
+        try (WireClient client = repo.getClient(botId)) {
 
             boolean valid = validator.isValid(botId, signature, payload);
             if (!valid) {
