@@ -43,9 +43,9 @@ public class MessageHandler extends MessageHandlerBase {
 
     @Override
     public boolean onNewBot(NewBot newBot) {
-        Logger.info(String.format("onNewBot: bot: %s, user: %s",
+        Logger.info("onNewBot: bot: %s, user: %s",
                 newBot.id,
-                newBot.origin.id));
+                newBot.origin.id);
         try {
             String secret = sesGen.next(6);
             getDatabase(newBot.id).insertSecret(secret);
