@@ -20,6 +20,7 @@ package com.wire.bots.github;
 
 import com.wire.bots.github.resource.GitHubResource;
 import com.wire.bots.github.resource.TravisResource;
+import com.wire.bots.sdk.Configuration;
 import com.wire.bots.sdk.MessageHandlerBase;
 import com.wire.bots.sdk.Server;
 import com.wire.bots.sdk.crypto.CryptoDatabase;
@@ -94,7 +95,8 @@ public class Service extends Server<Config> {
     @Override
     protected CryptoFactory getCryptoFactory(Config config) {
         return (botId) -> {
-            RedisStorage storage = new RedisStorage(config.db.host, config.db.port, config.db.password);
+            Configuration.DB db = config.db;
+            RedisStorage storage = new RedisStorage(db.host, db.port, db.password, db.timeout);
             return new CryptoDatabase(botId, storage);
         };
     }
